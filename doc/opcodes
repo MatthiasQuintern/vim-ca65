@@ -1,0 +1,81 @@
+load and store
+LDA	load accumulator with memory	NZ
+LDX	load X register with memory	NZ
+LDY	load Y register with memory	NZ
+STA	STore Accumulator in memory	-
+STX	STore X register in memory	-
+STY	STore Y register in memory	-
+STZ	store zero in memory	-
+Stack Operations
+PHA	push accumulator on stack	-
+PHX	push X register on stack	-
+PHY	push Y register on stack	-
+PHP	push processor status on stack	-
+PLA	pull accumulator from stack	NZ
+PLX	pull X register	from stack NZ
+PLY	pull Y register	from stack NZ
+PLP	pull processor status from stack	All
+TSX	transfer the stack pointer to the X register	NZ
+TXS	transfer the X register to the stack pointer register -
+Increment & Decrement Operations
+INX	increment X register by one	NZ
+INY	increment Y register by one	NZ
+DEX	decrement X register by one	NZ
+DEY	decrement Y register by one	NZ
+INC	increment memory or accumulator by one NZ
+DEC	decrement memory or accumulator by one NZ
+Shift Operations
+ASL	arithmetic shift one bit left, memory or accumulator	NZC
+LSR	logical shift one bit right, memory or accumulator	N=0 ZC
+ROL	rotate one bit left memory or accumulator	NZC
+ROR	rotate one bit right memory or accumulator	NZC
+Logical Operations
+AND	and accumulator with memory	NZ
+ORA	or accumulator with memory	NZ
+EOR	exclusive-or accumulator with memory	NZ
+BIT BIt Test	N=M7 V=M6 Z
+CMP	compare accumulator with memory	NZC
+CPX	compare X register with memory	NZC
+CPY	compare Y register with memory	NZC
+TRB	Test and Reset memory Bit	x
+TSB	Test and Set memory Bit	x
+RMB	reset memory bit	x
+SMB	set memory bit	x
+Math Operations
+ADC	add memory to accumulator with carry	NZCV
+SBC	subtract memory accumulator, with borrow (carry bit)	NZCV
+Flow Control Instructions
+JMP	jump to new location	-
+JSR	jump to Subroutine	-
+RTS	return from Subroutine	-
+RTI	return from Interrupt
+BRA	branch Always	-
+BEQ	branch if equal (Z == 0)	-
+BNE	branch if not equal (Z == 1)	-
+BCC	branch if carry clear (C == 0)	-
+BCS	branch if carry set (C == 1)	-
+BVC	branch if overflow clear (V == 0)	-
+BVS	branch if overflow set (V == 1)	-
+BMI	branch if minus (N == 1)	-
+BPL	branch if plus (N == 0)	-
+BBR	branch if bit reset -
+BBS	branch if bit set	-
+Processor Status Instructions
+CLC	clear carry flag	C=0
+CLD	clear decimal mode	D=0
+CLI	clear interrupt disable bit	I=0
+CLV	clear overflow flag	V=0
+SEC	set carry flag	C=1
+SED	set decimal mode	D=1
+SEI	set interrupt disable bit	I=1
+Transfer Instructions
+TAX	transfer accumulator to X register	NZ
+TAY	transfer accumulator to Y register	NZ
+TXA	transfer X register to accumulator	NZ
+TYA	transfer Y register to accumulator	NZ
+Misc Instructions
+NOP	no operation	-
+BRK	break instruction	B=1
+Interrupt
+wai wait for interrupt
+stp stop mode
