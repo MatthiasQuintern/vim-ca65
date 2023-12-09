@@ -4,9 +4,10 @@ It is focused on the 65C02 processor, please open an issue/a pull request if you
 
 By default, the plugin loads for files having a `.s65` or `.h65` extension.
 To load it for your preferred extension, write this into `~/.vim/ftdetect/ca6502.vim`:
-
+```vim
     " in ~/.vim/ftdetect/ca6502.vim
     au BufRead,BufNewFile *.myExtension setfiletype ca6502
+```
 
 
 ## Syntax
@@ -26,8 +27,10 @@ There is also a function that opens a header/source file with the same name in a
 For example if `~/project/main.s65` is opened, `~/project/main.h65` would be opened.
 To use it, map it and set your preferred assembly filetypes.
 
+```vim
     " in ~/.vim/ftplugin/ca6502.vim (or vimrc) 
     nnoremap <buffer> <leader>h :call SplitHeader("h65", "s65")<Cr>
+```
 
 ## Help
 I compiled the datasheet of the WDC 65C02 into a vim help page.
