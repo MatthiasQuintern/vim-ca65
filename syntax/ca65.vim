@@ -23,9 +23,6 @@ syn clear
 syn case ignore
 syntax iskeyword @,48-57,192-255,$,_,.,*
 
-" custom macros
-syn keyword customMacros Import Export Print Strf div
-
 " registers
 syn keyword ca65Reg x y a
 
@@ -116,7 +113,7 @@ hi link ca65PseudoFunctions   PreProc
 hi link ca65ControlCommands   PreProc
 hi link ca65MacLongbranch	  PreProc
 hi link ca65MacGeneric	      PreProc
-hi link customMacros	      PreProc
+hi link ca65customMacros	  PreProc
 " INSTRUCTIONS
 hi link ca6502Opcode          ca65Opcode
 hi link ca65C02Opcode         ca65Opcode

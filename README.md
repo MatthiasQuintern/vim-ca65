@@ -58,6 +58,12 @@ link `ca65Label` (or `ca65Opcode`) to another class, eg:
 hi link ca65Label Typedef
 ```
 
+You can add syntax highlighting for your own assembler like this:
+```vim
+" in ~/.vim/ftplugin/ca65.vim
+syn keyword ca65customMacros Macro1 Macro2 mul div macro3
+```
+
 ### Header/Source split function
 To use the source-header split function, map it and set your preferred assembly filetypes:
 ```vim
