@@ -35,9 +35,9 @@ call plug#end()
 ## Configuration
 ### Select processor
 By default, the syntax highlighting only highlights the original 6502 instructions.
-To enable the illegal/undocumented instructions, the 65C02 instructions or the 65816 instructions, write this into `~/.vim/ftplugin/ca65.vim`:
+To enable the illegal/undocumented instructions, the 65C02 instructions or the 65816 instructions, write this into your `vimrc`:
 ```vim
-" in ~/.vim/ftplugin/ca65.vim (or vimrc) 
+" in ~/.vimrc
 let g:ca65_illegal = 1  " enable the illegal 6502 opcodes
 let g:ca65_65C02 = 1    " enable 65C02 instructions
 let g:ca65_65816 = 1    " enable 65816 instructions
