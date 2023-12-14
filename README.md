@@ -27,7 +27,7 @@ Install using your favorite plugin manager, for example with vim-plug:
 ```vim
 " in vimrc
 call plug#begin()
-Plug 'MatthiasQuintern/vim-ca65'
+Plug 'matthiasquintern/vim-ca65'
 call plug#end()
 ```
 
