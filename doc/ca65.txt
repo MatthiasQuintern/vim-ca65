@@ -277,6 +277,10 @@ unaffected.
 Affected Flags: n v - - - - z - (Other than immediate addressing)
                 - - - - - - z - (Immediate addressing only)
 
+*   n: Takes value of most significant bit of memory data
+*   v: Takes value of next-to-highest bit of memory data
+*   z: Set if logical AND of memory and accumulator is zero; else cleared
+
 ----------------------------------------------------------------------------------------------------
 BMI                                                                                         *ca65-bmi*
 
@@ -393,6 +397,10 @@ execute correctly.
 Affected Flags: b - i - - (6502)
                 - - - b d i - - (65C02, 65802/65816 emulation mode e = 1 )
                 - - - - d i - - (65802/65816 native mode e = 0)
+
+*   b: b in the P register value pushed onto the stack is set
+*   d: d is reset to 0, for binary arithmetic
+*   i: The interrupt disable flag is set, disabling hardware IRQ interrupts
 
 ----------------------------------------------------------------------------------------------------
 BRL                                                                                         *ca65-brl*
@@ -1277,6 +1285,7 @@ so cannot be pulled from it. The only means of settingthe e flag is the XCE inst
 
 Affected Flags: n v - b d i z c (6502, 65C02, 65802/65816 emulation mode e = 1)
                 n v m x d i z c (65802/65816 native mode e = 0)
+
 All flags are replaced by the values in the byte pulled from the stack.
 
 ----------------------------------------------------------------------------------------------------
@@ -1339,6 +1348,7 @@ Pstatus register affect the m and x mode select flags).
 
 Affected Flags: n v - - d i z c (65802/65816 emulation mode e = 1)
                 n v m x d i z c (65802/65816 native mode e = 0)
+
 All flags for which an operand bit is set are reset to zero.
 All other flags are unaffected by the instruction.
 
@@ -1437,6 +1447,7 @@ Native Mode Stack before RTI:
 
 Affected Flags: n v - - d i z c (6502, 65C02, 65802/65816 emulation mode e = 1)
                 n v m x d i z c (65802/65816 native mode e = 0)
+
 All flags are restored to their values prior to interrupt (each flag takes the value of its corresponding bit in the stacked status byte, except that the Break flag is ignored).
 
 ----------------------------------------------------------------------------------------------------
@@ -1577,6 +1588,7 @@ flags).
 
 Affected Flags: n v - - d i z c (65802/65816 emulation e = 1)
                 n v m x d i z c (65802/65816 native mode e = 0)
+
 All flags for which an operand bit is set are set to one.
 All other flags are unaffected by the instruction.
 
