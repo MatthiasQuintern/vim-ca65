@@ -1,37 +1,66 @@
-# vim-ca6502 Support for the ca65 assembler
-This plugin provides syntax highlighting, convenience functions and help pages for the ca65 assembler.
-It is focused on the 65C02 processor, please open an issue/a pull request if you find anything that is missing.
+# vim-ca65: Vim support for the ca65 assembler
+This plugin provides **syntax** highlighting, **convenience** functions and **help** pages for the ca65 assembler.
 
-By default, the plugin loads for files having a `.s65` or `.h65` extension.
-To load it for your preferred extension, write this into `~/.vim/ftdetect/ca6502.vim`:
-```vim
-    " in ~/.vim/ftdetect/ca6502.vim
-    au BufRead,BufNewFile *.myExtension setfiletype ca6502
-```
+*I currently only work with the 65C02 processor. However, I tried to include everything for the 65816 as well. 
+If you find anything that is missing or mistakes, please open an issue or a pull request.*
 
 
-## Syntax
-The syntax highlighting currently supports the 65C02 opcodes, the ca65 assembler functions
+## Features
+### Syntax Highlighting
+The syntax highlighting currently supports the (undocumented) 6502, 65C02 and 65816 opcodes, the ca65 assembler functions
 and the macro packs `generic` and `longbranch`.
 
-If the labels and instructions have the same color in your colorscheme, 
-link `ca65Opcode` or `ca65Label` to another class, eg: `hi link ca65Label Typedef`.
-
-## Convenience
-This plugin provides the `b:match_words` variable for jumping between words.
+### Convenience
+This plugin provides the `b:match_words` variable for jumping between words (requires `matchit.vim`)
 Supported are the assembler commands like `.if` `.endif`, `.macro` `.endmacro` as well as stack instructions.
 This allows for easier checking of stack push/pull order.
 
-
 There is also a function that opens a header/source file with the same name in a vsplit.
-For example if `~/project/main.s65` is opened, `~/project/main.h65` would be opened.
-To use it, map it and set your preferred assembly filetypes.
+For example if `~/project/main.s65` is opened, the function would open `~/project/main.h65` to the right of it.
 
+### Help
+I compiled parts of the W65C02 datasheet and parts of the "Programming the 658126" book into a vim help page.
+Type `:help <opcode>` (or `help ca65-<opcode>` if the first one gives the wrong page) to see information about a opcode (how it works, updated flags...).
+
+## Installation
+Install using your favorite plugin manager, for example with vim-plug:
 ```vim
-    " in ~/.vim/ftplugin/ca6502.vim (or vimrc) 
-    nnoremap <buffer> <leader>h :call SplitHeader("h65", "s65")<Cr>
+" in vimrc
+call plug#begin()
+Plug 'MatthiasQuintern/vim-ca65'
+call plug#end()
 ```
 
-## Help
-I compiled the datasheet of the WDC 65C02 into a vim help page.
-Type `:help <opcode>` to see info about the opcode (addressing modes, updated flags...).
+
+## Configuration
+### Select processor
+By default, the syntax highlighting only highlights the original 6502 instructions.
+To enable the undocumented instructions, the 65C02 instructions or the 65816 instructions, write this into `~/.vim/ftplugin/ca65.vim`:
+```vim
+" in ~/.vim/ftplugin/ca65.vim (or vimrc) 
+let g:ca65_undoc = 1  " enable the undocumented opcodes
+let g:ca65_65C02 = 1  " enable 65C02 instructions
+let g:ca65_65816 = 1  " enable 65816 instructions
+```
+
+### Select filetype
+By default, the plugin loads for files having a `.s65` or `.h65` extension.
+To load it for your preferred extension, write this into `~/.vim/ftdetect/ca65.vim`:
+```vim
+" in ~/.vim/ftdetect/ca65.vim
+au BufRead,BufNewFile *.myExtension setfiletype ca65
+```
+### Customize syntax highlighting
+If the labels and instructions have the same color in your colorscheme, 
+link `ca65Label` (or `ca65Opcode`) to another class, eg: 
+```vim
+" in ~/.vim/ftplugin/ca65.vim
+hi link ca65Label Typedef
+```
+
+### Header/Source split function
+To use the source-header split function, map it and set your preferred assembly filetypes:
+```vim
+" in ~/.vim/ftplugin/ca65.vim
+nnoremap <buffer> <leader>h :call SplitHeader("h65", "s65")<Cr>
+```

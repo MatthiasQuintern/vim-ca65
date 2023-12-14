@@ -11,7 +11,8 @@ if !exists("*SplitHeader")
 endif
 
 " navigation with % using matchit plugin
-let b:match_words = '\<ph[axy]\>:\<pl[axy]\>,'
+" pea pei per  missing because they push two bytes
+let b:match_words = '\<ph[abdpkxy]\>:\<pl[abdpxy]\>,'
             \ . '\.\<if\>:\.\<elseif\>:\.\<else\>:\.\<endif\>,'
             \ . '\.\<proc\>:\.\<endproc\>,'
             \ . '\.\<mac(ro)?\>:\.\<endmac(ro)?\>,'

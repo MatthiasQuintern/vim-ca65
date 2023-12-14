@@ -8,6 +8,16 @@ if exists("b:current_syntax")
   finish
 endif
 
+if exists("g:ca65_65C02")
+  let b:ca65_65C02 = 1
+endif
+if exists("g:ca65_65816")
+  let b:ca65_65816 = 1
+endif
+if exists("g:ca65_illegal")
+  let b:ca65_illegal = 1
+endif
+
 " Remove any old syntax stuff hanging about
 syn clear
 syn case ignore
@@ -23,25 +33,36 @@ syn keyword ca65Reg x y a
 " OPCODES
 " keywords that are used in regions will not be defined here
 " ********************************************************************************
-" 650x
+" 65xxx
 " ********************************************************************************
 syn keyword ca6502Opcode  adc and asl bit brk clc cld cli clv cmp cpx cpy dec dex dey eor inc inx iny lda ldx ldy lsr nop ora pha php pla plp rol ror rti rts sbc sec sed sei sta stx sty tax tay tsx txa txs tya 
-syn region  ca65BranchTarget           matchgroup=ca6502Opcode start="\v(bcc|bcs|beq|bmi|bne|bpl|bvc|bvs|jmp|jsr)[ \t]+" end="$" contains=ca65Comment keepend
+syn region  ca6502BranchTarget           matchgroup=ca6502Opcode start="\v(bcc|bcs|beq|bmi|bne|bpl|bvc|bvs|jmp|jsr)[ \t]+" end="$" contains=ca65Comment keepend
 
 " ********************************************************************************
-" Atari 800XL 'Sally' undocumented opcodes
-" mnemonics taken from Trevin Beattie's 'Atari Technical Information' page
-" at "http://www.xmission.com/~trevin/atari/atari.shtml"
+" 6502 - Illegal/undocumented opcodes
 " ********************************************************************************
-" syn keyword ca65SallyUndoc anc arr asr asx ax7 axe brk dcp jam las lax php rla rra sax slo sre sx7 sy7 xea xs7
+if exists("b:ca65_illegal")
+syn keyword ca65Illegal alr anc arr axs dcp isc las lax rla rra sax slo sre
+endif
 
 " ********************************************************************************
 " 65C02
 " ********************************************************************************
+if exists("b:ca65_65C02") || exists("b:ca65_65816")
 syn keyword ca65C02Opcode   phx phy plx ply stz trb tsb stp wai
 syn match   ca65C02Opcode   "bb[rs][0-7]"
-syn region  ca65i65C02BranchTarget     matchgroup=ca65C02Opcode start="\(bra \)" end="$" contains=ca65Comment keepend
-syn match   ca65BitSetBranchTarget     "\v(bb[rs][0-7][ \t]+[^,]+,[ \t]*)@<=[^;]+"
+syn region  ca65C02BranchTarget     matchgroup=ca65C02Opcode start="\(bra \)" end="$" contains=ca65Comment keepend
+syn match   ca65BitSetBranchTarget  "\v(bb[rs][0-7][ \t]+[^,]+,[ \t]*)@<=[^;]+"
+endif
+
+" ********************************************************************************
+" 65816
+" ********************************************************************************
+if exists("b:ca65_65816")
+syn keyword ca65816Opcode cop mvn mvp pea pei per phb phd phk plb pld rep rtl sep stp tcd tcs tdc tsc txy tyx wai xba xce
+syn keyword ca65816OpcodeAlt cpa dea ina swa tad tas tda tsa
+syn region  ca65816BranchTarget matchgroup=ca65816Opcode start="\v(brl|jml|jsl)[ \t]+" end="$" contains=ca65Comment keepend
+endif
 
 " ********************************************************************************
 " ASSEMBLER
@@ -58,7 +79,7 @@ syn match decNumber	"\<\d\+\>"
 syn match hexNumber	"\$\x\+\>" " 'bug', but adding \< doesn't behave!
 syn match binNumber	"%[01]\+\>" 
 " syn region ca65Immediate start="\v((adc|and|bit|cmp|cpx|cpy|eor|lda|ldx|ldy|ora|sbc) +)@<=#" end="$" contains=ca65Comment,hexNumber,decNumber,binNumber,ca65Char,ca65Expression
-syn match ca65Immediate "\v((adc|and|bit|cmp|cpx|cpy|eor|lda|ldx|ldy|ora|sbc)[ \t]+)@<=#"
+syn match ca65Immediate "\v((adc|and|bit|cmp|cpx|cpy|eor|lda|ldx|ldy|ora|sbc|sep|rep)[ \t]+)@<=#"
 " ********************************************************************************
 " ca65
 " ********************************************************************************
@@ -74,8 +95,9 @@ syn region  ca65MacGenericBranchTarget    matchgroup=ca65MacGeneric start="\v(bg
 " LABELS:
 hi link ca65CheapLabel	            ca65Label
 hi link ca65UnnamedLabel            ca65Label
-hi link ca65BranchTarget            ca65Label
-hi link ca65i65C02BranchTarget	    ca65Label
+hi link ca6502BranchTarget          ca65Label
+hi link ca65C02BranchTarget	        ca65Label
+hi link ca65816BranchTarget	        ca65Label
 hi link ca65BitSetBranchTarget	    ca65Label
 hi link ca65ProcLabel	            ca65Label
 hi link ca65MacLongbranchTarget	    ca65Label
@@ -98,8 +120,10 @@ hi link customMacros	      PreProc
 " INSTRUCTIONS
 hi link ca6502Opcode          ca65Opcode
 hi link ca65C02Opcode         ca65Opcode
+hi link ca65816Opcode         ca65Opcode
+hi link ca65816OpcodeAlt      ca65Opcode
 hi link ca65Opcode            Statement
-hi link ca65SallyUndoc        Special
+hi link ca65Illegal           Special
 
 hi link ca65Reg               Identifier
 hi link ca65Todo              Todo
