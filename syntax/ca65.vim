@@ -85,6 +85,7 @@ syn keyword ca65PseudoVariables * .asize .cpu .isize .paramcount .time .version
 syn keyword ca65PseudoFunctions .addrsize .bank .bankbyte .blank .concat .const .def,.defined .definedmacro .hibyte .hiword .ident .ismnem,.ismnemonic .left .lobyte .loword .match .max .mid .min .ref,.referenced .right .sizeof .sprintf .strat .string .strlen .tcount .xmatch
 syn region  ca65ProcLabel       matchgroup=ca65ControlCommands start="\(\.proc\)" end="$" contains=ca65Comment keepend
 " macro packs
+syn keyword ca65MacGeneric      add sub
 syn region  ca65MacLongbranchTarget       matchgroup=ca65MacLongbranch start="\v(jcc|jcs|jeq|jmi|jne|jpl|jvc)[ \t]+" end="$" contains=ca65Comment keepend
 syn region  ca65MacGenericBranchTarget    matchgroup=ca65MacGeneric start="\v(bge|blt|bgt|ble|bnz|bze)[ \t]+" end="$" contains=ca65Comment keepend
 
