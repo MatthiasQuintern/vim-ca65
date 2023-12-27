@@ -21,3 +21,5 @@ let b:match_words = '\<ph[abdpkxy]\>:\<pl[abdpxy]\>,'
             \ . '\.\<struct\>:\.\<endstruct\>,'
             \ . '\.\<rep(eat)?\>:\.\<endrep(eat)?\>,'
             \ . '\.\<union\>:\.\<endunion\>'
+
+setlocal commentstring=;%s
