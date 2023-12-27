@@ -33,7 +33,7 @@ syn keyword ca65Reg x y a
 " 65xxx
 " ********************************************************************************
 syn keyword ca6502Opcode  adc and asl bit brk clc cld cli clv cmp cpx cpy dec dex dey eor inc inx iny lda ldx ldy lsr nop ora pha php pla plp rol ror rti rts sbc sec sed sei sta stx sty tax tay tsx txa txs tya 
-syn region  ca6502BranchTarget           matchgroup=ca6502Opcode start="\v(bcc|bcs|beq|bmi|bne|bpl|bvc|bvs|jmp|jsr)[ \t]+" end="$" contains=ca65Comment keepend
+syn region  ca6502BranchTarget           matchgroup=ca6502Opcode start="\v(^(.*:)?[ \t]*)@<=(bcc|bcs|beq|bmi|bne|bpl|bvc|bvs|jmp|jsr)[ \t]+" end="$" contains=ca65Comment keepend
 
 " ********************************************************************************
 " 6502 - Illegal/undocumented opcodes
@@ -49,7 +49,7 @@ if exists("b:ca65_65C02") || exists("b:ca65_65816")
 syn keyword ca65C02Opcode   phx phy plx ply stz trb tsb stp wai
 syn match   ca65C02Opcode   "bb[rs][0-7]"
 syn region  ca65C02BranchTarget     matchgroup=ca65C02Opcode start="\(bra \)" end="$" contains=ca65Comment keepend
-syn match   ca65BitSetBranchTarget  "\v(bb[rs][0-7][ \t]+[^,]+,[ \t]*)@<=[^;]+"
+syn match   ca65BitSetBranchTarget  "\v(^(.*:)?[ \t]*)@<=(bb[rs][0-7][ \t]+[^,]+,[ \t]*)@<=[^;]+"
 endif
 
 " ********************************************************************************
@@ -58,7 +58,7 @@ endif
 if exists("b:ca65_65816")
 syn keyword ca65816Opcode cop mvn mvp pea pei per phb phd phk plb pld rep rtl sep stp tcd tcs tdc tsc txy tyx wai xba xce
 syn keyword ca65816OpcodeAlt cpa dea ina swa tad tas tda tsa
-syn region  ca65816BranchTarget matchgroup=ca65816Opcode start="\v(brl|jml|jsl)[ \t]+" end="$" contains=ca65Comment keepend
+syn region  ca65816BranchTarget matchgroup=ca65816Opcode start="\v(^(.*:)?[ \t]*)@<=(brl|jml|jsl)[ \t]+" end="$" contains=ca65Comment keepend
 endif
 
 " ********************************************************************************
@@ -86,8 +86,8 @@ syn keyword ca65PseudoFunctions .addrsize .bank .bankbyte .blank .concat .const 
 syn region  ca65ProcLabel       matchgroup=ca65ControlCommands start="\(\.proc\)" end="$" contains=ca65Comment keepend
 " macro packs
 syn keyword ca65MacGeneric      add sub
-syn region  ca65MacLongbranchTarget       matchgroup=ca65MacLongbranch start="\v(jcc|jcs|jeq|jmi|jne|jpl|jvc)[ \t]+" end="$" contains=ca65Comment keepend
-syn region  ca65MacGenericBranchTarget    matchgroup=ca65MacGeneric start="\v(bge|blt|bgt|ble|bnz|bze)[ \t]+" end="$" contains=ca65Comment keepend
+syn region  ca65MacLongbranchTarget       matchgroup=ca65MacLongbranch start="\v(^(.*:)?[ \t]*)@<=(jcc|jcs|jeq|jmi|jne|jpl|jvc)[ \t]+" end="$" contains=ca65Comment keepend
+syn region  ca65MacGenericBranchTarget    matchgroup=ca65MacGeneric start="\v(^(.*:)?[ \t]*)@<=(bge|blt|bgt|ble|bnz|bze)[ \t]+" end="$" contains=ca65Comment keepend
 
 " The default methods for highlighting.  Can be overridden later
 " LABELS:
