@@ -96,6 +96,10 @@ CONTENTS                                                                        
     1.89. WDM...............................................................................|ca65-wdm|
     1.90. XBA...............................................................................|ca65-xba|
     1.91. XCE...............................................................................|ca65-xce|
+    1.92. BBR...............................................................................|ca65-bbr|
+    1.93. BBS...............................................................................|ca65-bbs|
+    1.94. RMB...............................................................................|ca65-rmb|
+    1.95. SMB...............................................................................|ca65-smb|
 
 ====================================================================================================
 INSTRUCTIONS                                                                       *ca65-instructions*
@@ -106,24 +110,24 @@ ADC                                                                             
 Add With Carry
 
 Add the data located at the effective address specified by the operand to the contents of the
-accumulator; add one to the result if the carry flag is set, and store thefinal result in the
+accumulator; add one to the result if the carry flag is set, and store the final result in the
 accumulator.
-The 65x processors have no add instruction which does not involve the carry. Toavoid adding the
-carry flag to the result, you must either be sure that it is alreadyclear, or you must explicitly
-clear it (using CLC) prior to executing the ADCinstruction.
-In a multi-precision (multi-word) addition, the carry should be cleared before thelow-order words
-are added; the addition of the low word will generate a new carryflag value based on that addition.
-This new value in the carry flag is added into thenext (middle-order or high-order) addition; each
-intermediate result will correctlyreflect the carry from the previous addition.
+The 65x processors have no add instruction which does not involve the carry. To avoid adding the
+carry flag to the result, you must either be sure that it is already clear, or you must explicitly
+clear it (using CLC) prior to executing the ADC instruction.
+In a multi-precision (multi-word) addition, the carry should be cleared before the low-order words
+are added; the addition of the low word will generate a new carry flag value based on that addition.
+This new value in the carry flag is added into the next (middle-order or high-order) addition; each
+intermediate result will correctly reflect the carry from the previous addition.
 d flag clear; Binary addition is performed.
 d flag set; Binary coded decimal (BCD) addition is performed.
 
 *   8-bit accumulator (all processors): Data added from memory is eight-bit.
 *   16-bit accumulator (65802/65816 only, m = 0): Data added from memory is sixteen-bit: the low-order
-    eight bits are located at the effective address; the high-ordereight bits are located at the
+    eight bits are located at the effective address; the high-order eight bits are located at the
     effective address plus one.
 
-Affected Flags:n v - - - - z c
+Affected Flags: n v - - - - z c
 
 *   n: Set if most-significant bit of result is set; else cleared
 *   v: Set if signed overflow; cleared if valid signed result
@@ -135,13 +139,13 @@ AND                                                                             
 
 And Accumulator with Memory
 
-Bitwise logical AND the data located at the effective address specified by theoperand with the
-contents of the accumulator. Each bit in the accumulator isANDed with the corresponding bit in
-memory, with the result being stored in therespective accumulator bit.
+Bitwise logical AND the data located at the effective address specified by the operand with the
+contents of the accumulator. Each bit in the accumulator is ANDed with the corresponding bit in
+memory, with the result being stored in the respective accumulator bit.
 
 *   8-bit accumulator (all processors): Data ANDed from memory is eight-bit.
-*   16-bit accumulator (65802/65816 only, m = 0): Data ANDed from memory issixteen-bit: the low-order
-    byte is located at the effective address; the high-orderbyte is located at the effective address
+*   16-bit accumulator (65802/65816 only, m = 0): Data ANDed from memory is sixteen-bit: the low-order
+    byte is located at the effective address; the high-order byte is located at the effective address
     plus one.
 
 The truth table for the "and" operation is:
@@ -149,7 +153,7 @@ The truth table for the "and" operation is:
 │ 0 │ 0 │ 0 │
 │ 1 │ 0 │ 1 │
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of result is set; else cleared
 *   z: Set if result is zero; else cleared
@@ -159,15 +163,15 @@ ASL                                                                             
 
 Shift Memory or Accumulator Left
 
-Shift the contents of the location specified by the operand left one bit. That is, bitone takes on
+Shift the contents of the location specified by the operand left one bit. That is, bit one takes on
 the value originally found in bit zero, bit two takes the value originally in bit one, and so on;
-the leftmost bit (bit 7 on the 6502 and 65C02 or ifm = 1 on the 65802/65816, or bit 15 if m = 0) is
-transferred into the carry flag;the rightmost bit, bit zero, is cleared. The arithmetic result of
-the operation is anunsigned multiplication by two.
+the leftmost bit (bit 7 on the 6502 and 65C02 or if m = 1 on the 65802/65816, or bit 15 if m = 0) is
+transferred into the carry flag; the rightmost bit, bit zero, is cleared. The arithmetic result of
+the operation is an unsigned multiplication by two.
 
 *   8-bit accumulator/memory (all processors): Data shifted is eight bits.
-*   16-bit accumulator/memory (65802/65816 only, m = 0): Data shifted is sixteenbits: if in memory,
-    the low-order eight bits are located at the effective address; thehigh-order eight bits are located
+*   16-bit accumulator/memory (65802/65816 only, m = 0): Data shifted is sixteen bits: if in memory,
+    the low-order eight bits are located at the effective address; the high-order eight bits are located
     at the effective address plus one.
 >
         ↶ ↶ ↶ ↶ ↶ ↶ ↶
@@ -177,7 +181,7 @@ the operation is anunsigned multiplication by two.
                   Carry
 <
 
-Affected Flags:n - - - - - z c
+Affected Flags: n - - - - - z c
 
 *   n: Set if most significant bit of result is set; else cleared
 *   z: Set if result is zero; else cleared
@@ -188,93 +192,93 @@ BCC                                                                             
 
 Branch if Carry Clear
 
-The carry flag in the P status register is tested. If it is clear, a branch is taken; if itis set,
-the instruction immediately following the two-byte BCC instruction is executed.If the branch is
-taken, a one-byte signed displacement, fetched from the secondbyte of the instruction, is
-sign-extended to sixteen bits and added to the programcounter. Once the branch address has been
-calculated, the result is loaded into theprogram counter, transferring control to that location.
-The allowable range of the displacement is — 128 to + 127 (from the instructionimmediately following
-the branch).
-BCC may be used in several ways: to test the result of a shift into the carry; todetermine if the
-result of a comparison is either less than (in which case a branchwill be taken), or greater than or
-equal (which causes control to fall through thebranch instruction); or to determine if further
-operations are needed in multi-precision arithmetic.Because the BCC instruction causes a branch to
-be taken after a comparison orsubtraction if the accumulator is less than the memory operand (since
-the carry flagwill always be cleared as a result), many assemblers allow an alternate mnemonicfor
+The carry flag in the P status register is tested. If it is clear, a branch is taken; if it is set,
+the instruction immediately following the two-byte BCC instruction is executed. If the branch is
+taken, a one-byte signed displacement, fetched from the second byte of the instruction, is
+sign-extended to sixteen bits and added to the program counter. Once the branch address has been
+calculated, the result is loaded into the program counter, transferring control to that location.
+The allowable range of the displacement is — 128 to + 127 (from the instruction immediately
+following the branch).
+BCC may be used in several ways: to test the result of a shift into the carry; to determine if the
+result of a comparison is either less than (in which case a branch will be taken), or greater than
+or equal (which causes control to fall through the branch instruction); or to determine if further
+operations are needed in multi-precision arithmetic. Because the BCC instruction causes a branch to
+be taken after a comparison or subtraction if the accumulator is less than the memory operand (since
+the carry flag will always be cleared as a result), many assemblers allow an alternate mnemonic for
 the BCC instruction: BLT, or Branch if Less Than.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 BCS                                                                                         *ca65-bcs*
 
 Branch if Carry Set
 
-The carry flag in the P status register is tested. If it is set, a branch is taken; if it isclear,
-the instruction immediately following the two-byte BCS instruction is executed.If the branch is
-taken, a one-byte signed displacement, fetched from the secondbyte of the instruction, is
-sign-extended to sixteen bits and added to the programcounter. Once the branch address has been
-calculated, the result is loaded into theprogram counter, transferring control to that location.
-The allowable range of the displacement is —128 to + 127 (from the instructionimmediately following
+The carry flag in the P status register is tested. If it is set, a branch is taken; if it is clear,
+the instruction immediately following the two-byte BCS instruction is executed. If the branch is
+taken, a one-byte signed displacement, fetched from the second byte of the instruction, is
+sign-extended to sixteen bits and added to the program counter. Once the branch address has been
+calculated, the result is loaded into the program counter, transferring control to that location.
+The allowable range of the displacement is —128 to + 127 (from the instruction immediately following
 the branch).
 BCS is used in several ways: to test the result of a shift into the carry; to determine if the
-result of a comparison is either greater than or equal (which causes thebranch to be taken) or less
-than; or to determine if further operations are needed inmulti-precision arithmetic operations.
-Because the BCS instruction causes a branch to be taken after a comparison orsubtraction if the
-accumulator is greater than or equal to the memory operand(since the carry flag will always be set
+result of a comparison is either greater than or equal (which causes the branch to be taken) or less
+than; or to determine if further operations are needed in multi-precision arithmetic operations.
+Because the BCS instruction causes a branch to be taken after a comparison or subtraction if the
+accumulator is greater than or equal to the memory operand (since the carry flag will always be set
 as a result), many assemblers allow an alternate mnemonic for the BCS instruction: BGE or Branch if
 Greater or Equal.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 BEQ                                                                                         *ca65-beq*
 
 Branch if Equal
 
-The zero flag in the P status register is tested. If it is set, meaning that the lastvalue tested
-(which affected the zero flag) was zero, a branch is taken; if it is clear,meaning the value tested
-was non-zero, the instruction immediately following thetwo-byte BEQ instruction is executed.
-If the branch is taken, a one-byte signed displacement, fetched from the secondbyte of the
-instruction, is sign-extended to sixteen bits and added to the programcounter. Once the branch
-address has been calculated, the result is loaded into theprogram counter, transferring control to
+The zero flag in the P status register is tested. If it is set, meaning that the last value tested
+(which affected the zero flag) was zero, a branch is taken; if it is clear, meaning the value tested
+was non-zero, the instruction immediately following the two-byte BEQ instruction is executed.
+If the branch is taken, a one-byte signed displacement, fetched from the second byte of the
+instruction, is sign-extended to sixteen bits and added to the program counter. Once the branch
+address has been calculated, the result is loaded into the program counter, transferring control to
 that location.
-The allowable range of the displacement is — 128 to + 127 (from the instructionimmediately following
-the branch).
-BEQ may be used in several ways: to determine if the result of a comparison iszero (the two values
-compared are equal), for example, or if a value just loaded,pulled, shifted, incremented or
+The allowable range of the displacement is — 128 to + 127 (from the instruction immediately
+following the branch).
+BEQ may be used in several ways: to determine if the result of a comparison is zero (the two values
+compared are equal), for example, or if a value just loaded, pulled, shifted, incremented or
 decremented is zero; or to determine if further operations are needed in multi-precision arithmetic
-operations. Because testing forequality to zero does not require a previous comparison with zero, it
-is generallymost efficient for loop counters to count downwards, exiting when zero is reached.
+operations. Because testing for equality to zero does not require a previous comparison with zero,
+it is generally most efficient for loop counters to count downwards, exiting when zero is reached.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 BIT                                                                                         *ca65-bit*
 
 Test Memory Bits against Accumulator
 
-BIT sets the P status register flags based on the result of two different operations,making it a
+BIT sets the P status register flags based on the result of two different operations, making it a
 dual-purpose instruction:
-First, it sets or clears the n flag to reflect the value of the high bit of the datalocated at the
-effective address specified by the operand, and sets or clears the vflag to reflect the contents of
-the next-to-highest bit of the data addressed.Second, it logically ANDs the data located at the
+First, it sets or clears the n flag to reflect the value of the high bit of the data located at the
+effective address specified by the operand, and sets or clears the v flag to reflect the contents of
+the next-to-highest bit of the data addressed. Second, it logically ANDs the data located at the
 effective address with the contents of the accumulator; it changes neither value, but sets the z
-flag if the result iszero, or clears it if the result is non-zero.
-BIT is usually used immediately preceding a conditional branch instruction: totest a memory value's
+flag if the result is zero, or clears it if the result is non-zero.
+BIT is usually used immediately preceding a conditional branch instruction: to test a memory value's
 highest or next-to-highest bits; with a mask in the accumulator, to test any bits of the memory
-operand; or with a constant as the mask (usingimmediate addressing) or a mask in memory, to test any
-bits in the accumulator.All of these tests are non-destructive of the data in the accumulator or in
-memory.When the BIT instruction is used with the immediate addressing mode, the n and vflags are
-unaffected.
+operand; or with a constant as the mask (using immediate addressing) or a mask in memory, to test
+any bits in the accumulator. All of these tests are non-destructive of the data in the accumulator
+or in memory. When the BIT instruction is used with the immediate addressing mode, the n and v flags
+are unaffected.
 
-*   8-bit accumulator/memory (all processors): Data in memory is eight-bit; bit 7 ismoved into the n
+*   8-bit accumulator/memory (all processors): Data in memory is eight-bit; bit 7 is moved into the n
     flag; bit 6 is moved into the v flag.
-*   16-bit accumulator/memory (65802/65816 only, m = 0): Data in memory issixteen-bit: the low-order
-    eight bits are located at the effective address; the high-order eight bits are located at the
-    effective address plus one. Bit 15 is moved intothe n flag; bit 14 is moved into the v flag.
+*   16-bit accumulator/memory (65802/65816 only, m = 0): Data in memory is sixteen-bit: the low-order
+    eight bits are located at the effective address; the high- order eight bits are located at the
+    effective address plus one. Bit 15 is moved into the n flag; bit 14 is moved into the v flag.
 
-Affected Flags: n v - - - - z - (Other than immediate addressing)
+Affected Flags:  n v - - - - z - (Other than immediate addressing)
                 - - - - - - z - (Immediate addressing only)
 
 *   n: Takes value of most significant bit of memory data
@@ -286,115 +290,115 @@ BMI                                                                             
 
 Branch if Minus
 
-The negative flag in the P status register is tested. If it is set, the high bit of thevalue which
-most recently affected the n flag was set, and a branch is taken. Anumber with its high bit set may
-be interpreted as a negative two's-complementnumber, so this instruction tests, among other things,
+The negative flag in the P status register is tested. If it is set, the high bit of the value which
+most recently affected the n flag was set, and a branch is taken. A number with its high bit set may
+be interpreted as a negative two's-complement number, so this instruction tests, among other things,
 for the sign of two's-complement numbers. If the negative flag is clear, the high bit of the value
-which mostrecently affected the flag was clear, or, in the two's-complement system, was a positive
-number, and the instruction immediately following the two-byte BMI instruction is executed.If the
-branch is taken, a one-byte signed displacement, fetched from the secondbyte of the instruction, is
-sign-extended to sixteen bits and added to the programcounter. Once the branch address has been
-calculated, the result is loaded into theprogram counter, transferring control to that location.
-The allowable range of the displacement is - 128 to + 127 (from the instructionimmediately following
-the branch).
-BMI is primarily used to either determine, in two's-complement arithmetic, if avalue is negative or,
-in logic situations, if the high bit of the value is set. It can alsobe used when looping down
-through zero (the loop counter must have a positiveinitial value) to determine if zero has been
-passed and to effect an exit from theloop.
+which most recently affected the flag was clear, or, in the two's-complement system, was a positive
+number, and the instruction immediately following the two-byte BMI instruction is executed. If the
+branch is taken, a one-byte signed displacement, fetched from the second byte of the instruction, is
+sign-extended to sixteen bits and added to the program counter. Once the branch address has been
+calculated, the result is loaded into the program counter, transferring control to that location.
+The allowable range of the displacement is - 128 to + 127 (from the instruction immediately
+following the branch).
+BMI is primarily used to either determine, in two's-complement arithmetic, if a value is negative
+or, in logic situations, if the high bit of the value is set. It can also be used when looping down
+through zero (the loop counter must have a positive initial value) to determine if zero has been
+passed and to effect an exit from the loop.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 BNE                                                                                         *ca65-bne*
 
 Branch if Not Equal
 
-The zero flag in the P status register is tested. If it is clear (meaning the value justtested is
-non-zero), a branch is taken; if it is set (meaning the value tested is zero),the instruction
-immediately following the two-byte BNE instruction is executed.If the branch is taken, a one-byte
-signed displacement, fetched from the secondbyte of the instruction, is sign-extended to sixteen
-bits and added to the programcounter. Once the branch address has been calculated, the result is
-loaded into theprogram counter, transferring control to that location.
-The allowable range of the displacement is —128 to + 127 (from the instructionimmediately following
+The zero flag in the P status register is tested. If it is clear (meaning the value just tested is
+non-zero), a branch is taken; if it is set (meaning the value tested is zero), the instruction
+immediately following the two-byte BNE instruction is executed. If the branch is taken, a one-byte
+signed displacement, fetched from the second byte of the instruction, is sign-extended to sixteen
+bits and added to the program counter. Once the branch address has been calculated, the result is
+loaded into the program counter, transferring control to that location.
+The allowable range of the displacement is —128 to + 127 (from the instruction immediately following
 the branch).
-BNE may be used in several ways: to determine if the result of a comparison isnon-zero (the two
-values compared are not equal), for example, or if the value justloaded or pulled from the stack is
-non-zero, or to determine if further operationsare needed in multi-precision arithmetic operations.
+BNE may be used in several ways: to determine if the result of a comparison is non-zero (the two
+values compared are not equal), for example, or if the value just loaded or pulled from the stack is
+non-zero, or to determine if further operations are needed in multi-precision arithmetic operations.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 BPL                                                                                         *ca65-bpl*
 
 Branch if Plus
 
-The negative flag in the P status register is tested. If it is clear—meaning that thelast value
-which affected the zero flag had its high bit clear—a branch is taken. Inthe two's-complement
-system, values with their high bit clear are interpreted aspositive numbers. If the flag is set,
-meaning the high bit of the last value was set,the branch is not taken; it is a two's-complement
-negative number, and the instruction immediately following the two-byte BPL instruction is
-executed.If the branch is taken, a one-byte signed displacement, fetched from the secondbyte of the
-instruction, is sign-extended to sixteen bits and added to the programcounter. Once the branch
-address has been calculated, the result is loaded into theprogram counter, transferring control to
+The negative flag in the P status register is tested. If it is clear—meaning that the last value
+which affected the zero flag had its high bit clear—a branch is taken. In the two's-complement
+system, values with their high bit clear are interpreted as positive numbers. If the flag is set,
+meaning the high bit of the last value was set, the branch is not taken; it is a two's-complement
+negative number, and the instruction immediately following the two-byte BPL instruction is executed.
+If the branch is taken, a one-byte signed displacement, fetched from the second byte of the
+instruction, is sign-extended to sixteen bits and added to the program counter. Once the branch
+address has been calculated, the result is loaded into the program counter, transferring control to
 that location.
-The allowable range of the displacement is —128 to -I-127 (from the instructionimmediately following
-the branch).
-BPL is used primarily to determine, in two's-complement arithmetic, if a value ispositive or not or,
-in logic situations, if the high bit of the value is clear.
+The allowable range of the displacement is —128 to -I-127 (from the instruction immediately
+following the branch).
+BPL is used primarily to determine, in two's-complement arithmetic, if a value is positive or not
+or, in logic situations, if the high bit of the value is clear.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 BRA                                                                                         *ca65-bra*
 
 Branch Always
 
-A branch is always taken, and no testing is done: in effect, an unconditional JMPis executed, but
-since signed displacements are used, the instruction is only twobytes, rather than the three bytes
-of a JMP. Additionally, using displacements fromthe program counter makes the BRA instruction
+A branch is always taken, and no testing is done: in effect, an unconditional JMP is executed, but
+since signed displacements are used, the instruction is only two bytes, rather than the three bytes
+of a JMP. Additionally, using displacements from the program counter makes the BRA instruction
 relocatable. Unlike a JMP instruction, the BRA is limited to targets that lie within the range of
-the one-byte signeddisplacement of the conditional branches: — 128 to + 127 bytes from the first
-bytefollowing the BRA instruction.
-To branch, a one-byte signed displacement, fetched from the second byte of theinstruction, is
-sign-extended to sixteen bits and added to the program counter.Once the branch address has been
-calculated, the result is loaded into the programcounter, transferring control to that location.
+the one-byte signed displacement of the conditional branches: — 128 to + 127 bytes from the first
+byte following the BRA instruction.
+To branch, a one-byte signed displacement, fetched from the second byte of the instruction, is
+sign-extended to sixteen bits and added to the program counter. Once the branch address has been
+calculated, the result is loaded into the program counter, transferring control to that location.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 BRK                                                                                         *ca65-brk*
 
 Software Break
 
-Force a software interrupt. BRK is unaffected by the i interrupt disable flag.Although BRK is a
-one-byte instruction, the program counter (which is pushedonto the stack by the instruction) is
-incremented by two; this lets you follow thebreak instruction with a one-byte signature byte
-indicating which break caused theinterrupt. Even if a signature byte is not needed, either the byte
-following the BRKinstruction must be padded with some value or the break-handling routine
-mustdecrement the return address on the stack to let an RTI (return from interrupt)instruction
-execute correctly.
+Force a software interrupt. BRK is unaffected by the i interrupt disable flag. Although BRK is a
+one-byte instruction, the program counter (which is pushed onto the stack by the instruction) is
+incremented by two; this lets you follow the break instruction with a one-byte signature byte
+indicating which break caused the interrupt. Even if a signature byte is not needed, either the byte
+following the BRK instruction must be padded with some value or the break-handling routine must
+decrement the return address on the stack to let an RTI (return from interrupt) instruction execute
+correctly.
 
-*   6502, 65C02, and Emulation Mode (e = l): The program counter is incrementedby two, then pushed
-    onto the stack; the status register, with the b break flag set, ispushed onto the stack; the
-    interrupt disable flag is set; and the program counter isloaded from the interrupt vector at
-    $FFFE-FFFF. It is up to the interrupt handlingroutine at this address to check the b flag in the
-    stacked status register to determineif the interrupt was caused by a software interrupt (BRK) or by
-    a hardware IRQ,which shares the BRK vector but pushes the status register onto the stack with the
-    bbreak flag clear. For example,
+*   6502, 65C02, and Emulation Mode (e = l): The program counter is incremented by two, then pushed
+    onto the stack; the status register, with the b break flag set, is pushed onto the stack; the
+    interrupt disable flag is set; and the program counter is loaded from the interrupt vector at
+    $FFFE-FFFF. It is up to the interrupt handling routine at this address to check the b flag in the
+    stacked status register to determine if the interrupt was caused by a software interrupt (BRK) or by
+    a hardware IRQ, which shares the BRK vector but pushes the status register onto the stack with the b
+    break flag clear. For example,
 >
         PLA       ; copy status from
         PHA       ; top of stack
         AND #$10  ; check BRK bit
         BNE ISBRK ; branch if set
 <
-*   65802/65816 Native Mode (e = 0): The program counter bank register is pushedonto the stack; the
-    program counter is incremented by two and pushed onto thestack; the status register is pushed onto
-    the stack; the interrupt disable flag is set;the program bank register is cleared to zero; and the
-    program counter is loadedfrom the break vector at $OOFFE6-OOFFE7.
+*   65802/65816 Native Mode (e = 0): The program counter bank register is pushed onto the stack; the
+    program counter is incremented by two and pushed onto the stack; the status register is pushed onto
+    the stack; the interrupt disable flag is set; the program bank register is cleared to zero; and the
+    program counter is loaded from the break vector at $OOFFE6-OOFFE7.
 *   6502: The d decimal flag is not modified after a break is executed.
 *   65C02 and 65816/65802: The d decimal flag is reset to 0 after a break is executed.
 
-Affected Flags: b - i - - (6502)
+Affected Flags:  b - i - - (6502)
                 - - - b d i - - (65C02, 65802/65816 emulation mode e = 1 )
                 - - - - d i - - (65802/65816 native mode e = 0)
 
@@ -407,70 +411,70 @@ BRL                                                                             
 
 Branch Always Long
 
-A branch is always taken, similar to the BRA instruction. However, BRL is athree-byte instruction;
-the two bytes immediately following the opcode form asixteen-bit signed displacement from the
-program counter. Once the branch addresshas been calculated, the result is loaded into the program
-counter, transferring control to that location.The allowable range of the displacement is anywhere
-within the current 64K program bank.The long branch provides an unconditional transfer of control
-similar to the JMPinstruction, with one major advantage: the branch instruction is relocatable
-whilejump instructions are not. However, the (non-relocatable) jump absolute instruction executes
+A branch is always taken, similar to the BRA instruction. However, BRL is a three-byte instruction;
+the two bytes immediately following the opcode form a sixteen-bit signed displacement from the
+program counter. Once the branch address has been calculated, the result is loaded into the program
+counter, transferring control to that location. The allowable range of the displacement is anywhere
+within the current 64K program bank. The long branch provides an unconditional transfer of control
+similar to the JMP instruction, with one major advantage: the branch instruction is relocatable
+while jump instructions are not. However, the (non-relocatable) jump absolute instruction executes
 one cycle faster.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 BVC                                                                                         *ca65-bvc*
 
 Branch if Overflow Clear
 
-The overflow flag in the P status register is tested. If it is clear, a branch is taken;if it is
-set, the instruction immediately following the two-byte BVC instruction isexecuted.
-If the branch is taken, a one-byte signed displacement, fetched from the secondbyte of the
-instruction, is sign-extended to sixteen bits and added to the programcounter. Once the branch
-address has been calculated, the result is loaded into theprogram counter, transferring control to
+The overflow flag in the P status register is tested. If it is clear, a branch is taken; if it is
+set, the instruction immediately following the two-byte BVC instruction is executed.
+If the branch is taken, a one-byte signed displacement, fetched from the second byte of the
+instruction, is sign-extended to sixteen bits and added to the program counter. Once the branch
+address has been calculated, the result is loaded into the program counter, transferring control to
 that location.
-The allowable range of the displacement is —128 to -1-127 (from the instructionimmediately following
-the branch).
-The overflow flag is altered by only four instructions on the 6502 and 65C02—addition, subtraction,
-the CLV clear-the-flag instruction, and the BIT bit-testinginstruction. In addition, all the flags
-are restored from the stack by the PLP andRTI instructions. On the 65802/65816, however, the SEP and
-REP instructions canalso modify the v flag.
+The allowable range of the displacement is —128 to -1-127 (from the instruction immediately
+following the branch).
+The overflow flag is altered by only four instructions on the 6502 and 65C02— addition, subtraction,
+the CLV clear-the-flag instruction, and the BIT bit-testing instruction. In addition, all the flags
+are restored from the stack by the PLP and RTI instructions. On the 65802/65816, however, the SEP
+and REP instructions can also modify the v flag.
 BVC is used almost exclusively to check that a two's-complement arithmetic calculation has not
-overflowed, much as the carry is used to determine if an unsignedarithmetic calculation has
+overflowed, much as the carry is used to determine if an unsigned arithmetic calculation has
 overflowed. (Note, however, that the compare instructions do not affect the overflow flag.) You can
-also use BVC to test the second—highest bit in a value by using it after the BIT instruction, which
-moves the second-highest bit of the tested value into the v flag.
-The overflow flag can also be set by the Set Overflow hardware signal on the6502, 65C02, and 65802;
-on many systems, however, there is no connection to thispin.
+also use BVC to test the second— highest bit in a value by using it after the BIT instruction, which
+moves the second- highest bit of the tested value into the v flag.
+The overflow flag can also be set by the Set Overflow hardware signal on the 6502, 65C02, and 65802;
+on many systems, however, there is no connection to this pin.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 BVS                                                                                         *ca65-bvs*
 
 Branch if Overflow Set
 
-The overflow flag in the P status register is tested. If it is set, a branch is taken; ifit is
-clear, the instruction immediately following the two-byte BVS instruction isexecuted.
-If the branch is taken, a one-byte signed displacement, fetched from the secondbyte of the
-instruction, is sign-extended to sixteen bits and added to the programcounter. Once the branch
-address has been calculated, the result is loaded into theprogram counter, transferring control to
+The overflow flag in the P status register is tested. If it is set, a branch is taken; if it is
+clear, the instruction immediately following the two-byte BVS instruction is executed.
+If the branch is taken, a one-byte signed displacement, fetched from the second byte of the
+instruction, is sign-extended to sixteen bits and added to the program counter. Once the branch
+address has been calculated, the result is loaded into the program counter, transferring control to
 that location.
-The allowable range of the displacement is —128 to + 127 (from the instructionimmediately following
+The allowable range of the displacement is —128 to + 127 (from the instruction immediately following
 the branch).
-The overflow flag is altered by only four instructions on the 6502 and 65C02—addition, subtraction,
-the CLV clear-the-flag instruction, and the BIT bit-testinginstruction. In addition, all the flags
-are restored from the stack by the PLP andRTI instructions. On the 65802/65816, the SEP and REP
-instructions can also modify the v flag.BVS is used almost exclusively to determine if a
-two's-complement arithmeticcalculation has overflowed, much as the carry is used to determine if
-anunsigned arithmetic calculation has overflowed. (Note, however, that the compareinstructions do
-not affect the overflow flag.) You can also use BVS to test thesecond-highest bit in a value by
-using it after the BIT instruction, which moves thesecond-highest bit of the tested value into the v
+The overflow flag is altered by only four instructions on the 6502 and 65C02— addition, subtraction,
+the CLV clear-the-flag instruction, and the BIT bit-testing instruction. In addition, all the flags
+are restored from the stack by the PLP and RTI instructions. On the 65802/65816, the SEP and REP
+instructions can also modify the v flag. BVS is used almost exclusively to determine if a
+two's-complement arithmetic calculation has overflowed, much as the carry is used to determine if an
+unsigned arithmetic calculation has overflowed. (Note, however, that the compare instructions do not
+affect the overflow flag.) You can also use BVS to test the second-highest bit in a value by using
+it after the BIT instruction, which moves the second-highest bit of the tested value into the v
 flag.
-The overflow flag can also be set by the Set Overflow hardware signal on the6502, 65C02, and 65802;
+The overflow flag can also be set by the Set Overflow hardware signal on the 6502, 65C02, and 65802;
 on many systems, however, there is no hardware connection to this signal.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 CLC                                                                                         *ca65-clc*
@@ -478,12 +482,12 @@ CLC                                                                             
 Clear Carry Flag
 
 Clear the carry flag in the status register.
-CLC is used prior to addition (using the 65x's ADC instruction) to keep the carryflag from affecting
-the result; prior to a BCC (branch on carry clear) instruction onthe 6502 to force a branch-always;
-and prior to an XCE (exchange carry flag withemulation bit) instruction to put the 65802 or 65816
-into native mode.
+CLC is used prior to addition (using the 65x's ADC instruction) to keep the carry flag from
+affecting the result; prior to a BCC (branch on carry clear) instruction on the 6502 to force a
+branch-always; and prior to an XCE (exchange carry flag with emulation bit) instruction to put the
+65802 or 65816 into native mode.
 
-Affected Flags:- - - - - - - c
+Affected Flags: - - - - - - - c
 
 *   c: carry flag cleared always
 
@@ -493,10 +497,10 @@ CLD                                                                             
 Clear Decimal Mode Flag
 
 Clear the decimal mode flag in the status register.
-CLD is used to shift 65x processors back into binary mode from decimal mode,so that the ADC and SBC
-instructions will correctly operate on binary rather thanBCD data.
+CLD is used to shift 65x processors back into binary mode from decimal mode, so that the ADC and SBC
+instructions will correctly operate on binary rather than BCD data.
 
-Affected Flags:- - - - d - - -
+Affected Flags: - - - - d - - -
 
 *   d: decimal mode flag cleared always
 
@@ -506,15 +510,15 @@ CLI                                                                             
 Clear Interrupt Disable Flag
 
 Clear the interrupt disable flag in the status register.
-CLI is used to re-enable hardware interrupt (IRQ) processing. (When the i bit isset, hardware
-interrupts are ignored.) The processor itself sets the i flag when itbegins servicing an interrupt,
+CLI is used to re-enable hardware interrupt (IRQ) processing. (When the i bit is set, hardware
+interrupts are ignored.) The processor itself sets the i flag when it begins servicing an interrupt,
 so interrupt handling routines must re-enable interrupts with CLI if the interrupt-service routine
-is designed to service interrupts thatoccur while a previous interrupt is still being handled;
+is designed to service interrupts that occur while a previous interrupt is still being handled;
 otherwise, the RTI instruction will restore a clear i flag from the stack, and CLI is not necessary.
-CLI is alsoused to re-enable interrupts if they have been disabled during the execution
-oftime-critical or other code which cannot be interrupted.
+CLI is also used to re-enable interrupts if they have been disabled during the execution of
+time-critical or other code which cannot be interrupted.
 
-Affected Flags:- - - - - i - -
+Affected Flags: - - - - - i - -
 
 *   i: interrupt disable flag cleared always
 
@@ -524,14 +528,14 @@ CLV                                                                             
 Clear Overflow Flag
 
 Clear the overflow flag in the status register.
-CLV is sometimes used prior to a BVC (branch on overflow clear) to force abranch-always on the 6502.
-Unlike the other clear flag instructions, there is nocomplementary "set flag" instruction to set the
-overflow flag, although the overflow flag can be set by hardware via the Set Overflow input pin on
-the processor.This signal, however, is often unconnected. The 65802/65816 REP instruction can,of
-course, clear the overflow flag; on the 6502 and 65C02, a BIT instruction with amask in memory that
-has bit 6 set can be used to set the overflow flag.
+CLV is sometimes used prior to a BVC (branch on overflow clear) to force a branch-always on the
+6502. Unlike the other clear flag instructions, there is no complementary "set flag" instruction to
+set the overflow flag, although the overflow flag can be set by hardware via the Set Overflow input
+pin on the processor. This signal, however, is often unconnected. The 65802/65816 REP instruction
+can, of course, clear the overflow flag; on the 6502 and 65C02, a BIT instruction with a mask in
+memory that has bit 6 set can be used to set the overflow flag.
 
-Affected Flags:- v - - - - - -
+Affected Flags: - v - - - - - -
 
 *   v: overflow flag cleared always
 
@@ -540,26 +544,26 @@ CMP                                                                             
 
 Compare Accumulator with Memory
 
-Subtract the data located at the effective address specified by the operand fromthe contents of the
-accumulator, setting the carry, zero, and negative flags based onthe result, but without altering
-the contents of either the memory location or theaccumulator. That is, the result is not saved. The
-comparison is of unsigned binaryvalues only.
-The CMP instruction differs from the SBC instruction in several ways. First, theresult is not saved.
-Second, the value in the carry prior to the operation is irrelevant to the operation; that is, the
-carry does not have to be set prior to a compareas it is with 65x subtractions. Third, the compare
-instruction does not set the overflow flag, so it cannot be used for signed comparisons. Although
-decimal modedoes not affect the CMP instruction, decimal comparisons are effective, since
-theequivalent binary values maintain the same magnitude relationships as the decimalvalues have, for
-example, $99 > $04 just as 99 > 4.
+Subtract the data located at the effective address specified by the operand from the contents of the
+accumulator, setting the carry, zero, and negative flags based on the result, but without altering
+the contents of either the memory location or the accumulator. That is, the result is not saved. The
+comparison is of unsigned binary values only.
+The CMP instruction differs from the SBC instruction in several ways. First, the result is not
+saved. Second, the value in the carry prior to the operation is irrelevant to the operation; that
+is, the carry does not have to be set prior to a compare as it is with 65x subtractions. Third, the
+compare instruction does not set the overflow flag, so it cannot be used for signed comparisons.
+Although decimal mode does not affect the CMP instruction, decimal comparisons are effective, since
+the equivalent binary values maintain the same magnitude relationships as the decimal values have,
+for example, $99 > $04 just as 99 > 4.
 The primary use for the compare instruction is to set the flags so that a conditional branch can
 then be executed.
 
 *   8-bit accumulator (all processors): Data compared is eight-bit.
-*   16-bit accumulator (65802/65816 only, m = 0): Data compared is sixteen-bit: thelow-order eight
-    bits of the data in memory are located at the effective address; thehigh-order eight bits are
+*   16-bit accumulator (65802/65816 only, m = 0): Data compared is sixteen-bit: the low-order eight
+    bits of the data in memory are located at the effective address; the high-order eight bits are
     located at the effective address plus one.
 
-Affected Flags:n - - - - - z c
+Affected Flags: n - - - - - z c
 
 *   n: Set if most significant bit of result is set; else cleared
 *   z: Set if result is zero; else cleared
@@ -571,28 +575,28 @@ COP                                                                             
 
 Co-Processor Enable
 
-Execution of COP causes a software interrupt, similarly to BRK, but through theseparate COP vector.
-Alternatively, COP may be trapped by a co-processor, suchas a floating point or graphics processor,
-to call a co-processor function. COP isunaffected by the i interrupt disable flag.
-COP is much like BRK, with the program counter value pushed on the stackbeing incremented by two;
-this lets you follow the co-processor instruction with asignature byte to indicate to the
-co-processor or co-processor handling routinewhich operation to execute. Unlike the BRK instruction,
-65816 assemblers requireyou to follow the COP instruction with such a signature byte. Signature
-bytes inthe range $80 - $FF are reserved by the Western Design Center for implementationof
-co-processor control; signatures in the range $00 - $7F are available for use
-withsoftware-implemented COP handlers.
+Execution of COP causes a software interrupt, similarly to BRK, but through the separate COP vector.
+Alternatively, COP may be trapped by a co-processor, such as a floating point or graphics processor,
+to call a co-processor function. COP is unaffected by the i interrupt disable flag.
+COP is much like BRK, with the program counter value pushed on the stack being incremented by two;
+this lets you follow the co-processor instruction with a signature byte to indicate to the
+co-processor or co-processor handling routine which operation to execute. Unlike the BRK
+instruction, 65816 assemblers require you to follow the COP instruction with such a signature byte.
+Signature bytes in the range $80 - $FF are reserved by the Western Design Center for implementation
+of co-processor control; signatures in the range $00 - $7F are available for use with
+software-implemented COP handlers.
 
-*   6502 Emulation Mode (65802/65816, e= 1): The program counter is incrementedby two and pushed onto
-    the stack; the status register is pushed onto the stack; theinterrupt disable flag is set; and the
-    program counter is loaded from the emulationmode co-processor vector at $FFF4-FFF5. The d decimal
-    flag is cleared after a COPis executed.
-*   65802/65816 Native Mode (e = 0): The program counter bank register is pushedonto the stack; the
-    program counter is incremented by two and pushed onto thestack; the status register is pushed onto
-    the stack; the interrupt disable flag is set;the program bank register is cleared to zero; and the
-    program counter is loadedfrom the native mode co-processor vector at $00FFE4-00FFE5. The d decimal
-    flag isreset to 0 after a COP is executed.
+*   6502 Emulation Mode (65802/65816, e= 1): The program counter is incremented by two and pushed onto
+    the stack; the status register is pushed onto the stack; the interrupt disable flag is set; and the
+    program counter is loaded from the emulation mode co-processor vector at $FFF4-FFF5. The d decimal
+    flag is cleared after a COP is executed.
+*   65802/65816 Native Mode (e = 0): The program counter bank register is pushed onto the stack; the
+    program counter is incremented by two and pushed onto the stack; the status register is pushed onto
+    the stack; the interrupt disable flag is set; the program bank register is cleared to zero; and the
+    program counter is loaded from the native mode co-processor vector at $00FFE4-00FFE5. The d decimal
+    flag is reset to 0 after a COP is executed.
 
-Affected Flags:- - - - d i - -
+Affected Flags: - - - - d i - -
 
 *   d: d is reset to 0
 *   i: The interrupt disable flag is set, disabling hardware interrupts
@@ -602,19 +606,19 @@ CPX                                                                             
 
 Compare Index Register X with Memory
 
-Subtract the data located at the effective address specified by the operand fromthe contents of the
-X register, setting the carry, zero, and negative flags based onthe result, but without altering the
-contents of either the memory location or theregister. The result is not saved. The comparison is of
-unsigned values only (exceptfor signed comparison for equality).
+Subtract the data located at the effective address specified by the operand from the contents of the
+X register, setting the carry, zero, and negative flags based on the result, but without altering
+the contents of either the memory location or the register. The result is not saved. The comparison
+is of unsigned values only (except for signed comparison for equality).
 The primary use for the CPX instruction is to test the value of the X index register against loop
-boundaries, setting the flags so that a conditional branch can beexecuted.
+boundaries, setting the flags so that a conditional branch can be executed.
 
 *   8-bit index registers (all processors): Data compared is eight-bit.
-*   16-bit index registers (65802/65816 only, x = 0): Data compared is sixteen-bit:the low-order eight
-    bits of the data in memory are located at the effective address;the high-order eight bits are
+*   16-bit index registers (65802/65816 only, x = 0): Data compared is sixteen-bit: the low-order
+    eight bits of the data in memory are located at the effective address; the high-order eight bits are
     located at the effective address plus one.
 
-Affected Flags:n - - - - - z c
+Affected Flags: n - - - - - z c
 
 *   n: Set if most significant bit of result is set; else cleared
 *   z: Set if result is zero; else cleared
@@ -626,19 +630,19 @@ CPY                                                                             
 
 Compare Index Register Y with Memory
 
-Subtract the data located at the effective address specified by the operand fromthe contents of the
-Y register, setting the carry, zero, and negative flags based onthe result, but without altering the
-contents of either the memory location or theregister. The comparison is of unsigned values only
-(except for signed comparisonfor equality).
+Subtract the data located at the effective address specified by the operand from the contents of the
+Y register, setting the carry, zero, and negative flags based on the result, but without altering
+the contents of either the memory location or the register. The comparison is of unsigned values
+only (except for signed comparison for equality).
 The primary use for the CPY instruction is to test the value of the Y index register against loop
-boundaries, setting the flags so that a conditional branch can beexecuted.
+boundaries, setting the flags so that a conditional branch can be executed.
 
 *   8-bit index registers (all processors): Data compared is eight-bit.
-*   16-bit index registers (65802/65816 only, x = 0): Data compared is sixteen-bit:the low-order eight
-    bits of the data in memory is located at the effective address;the high-order eight bits are located
-    at the effective address plus one.
+*   16-bit index registers (65802/65816 only, x = 0): Data compared is sixteen-bit: the low-order
+    eight bits of the data in memory is located at the effective address; the high-order eight bits are
+    located at the effective address plus one.
 
-Affected Flags:n - - - - - z c
+Affected Flags: n - - - - - z c
 
 *   n: Set if most significant bit of result is set; else cleared
 *   z: Set if result is zero; else cleared
@@ -650,19 +654,20 @@ DEC                                                                             
 
 Decrement
 
-Decrement by one the contents of the location specified by the operand (subtractone from the value).
-Unlike subtracting a one using the SBC instruction, the decrement instruction isneither affected by
-nor affects the carry flag. You can test for wraparound only bytesting after every decrement to see
-if the value is zero or negative. On the otherhand, you don't need to set the carry before
+Decrement by one the contents of the location specified by the operand (subtract one from the
+value).
+Unlike subtracting a one using the SBC instruction, the decrement instruction is neither affected by
+nor affects the carry flag. You can test for wraparound only by testing after every decrement to see
+if the value is zero or negative. On the other hand, you don't need to set the carry before
 decrementing.
 DEC is unaffected by the setting of the d (decimal) flag.
 
 *   8-bit accumulator/memory (all processors): Data decremented is eight-bit.
-*   16-bit accumulator/memory (65802/65816 only, m = 0): Data decremented issixteen-bit: if in memory,
-    the low-order eight bits are located at the effectiveaddress; the high-order eight bits are located
-    at the effective address plus one.
+*   16-bit accumulator/memory (65802/65816 only, m = 0): Data decremented is sixteen-bit: if in
+    memory, the low-order eight bits are located at the effective address; the high-order eight bits are
+    located at the effective address plus one.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of result is set; else cleared
 *   z: Set if result is zero; else cleared
@@ -672,17 +677,17 @@ DEX                                                                             
 
 Decrement Index Register X
 
-Decrement by one the contents of index register X (subtract one from the value).This is a special
-purpose, implied addressing form of the DEC instruction.Unlike using SBC to subtract a one from the
-value, the DEX instruction does notaffect the carry flag; you can test for wraparound only by
+Decrement by one the contents of index register X (subtract one from the value). This is a special
+purpose, implied addressing form of the DEC instruction. Unlike using SBC to subtract a one from the
+value, the DEX instruction does not affect the carry flag; you can test for wraparound only by
 testing after every decrement to see if the value is zero or negative. On the other hand, you don't
-need toset the carry before decrementing.
+need to set the carry before decrementing.
 DEX is unaffected by the setting of the d (decimal) flag.
 
 *   8-bit index registers (all processors): Data decremented is eight-bit.
 *   16-bit index registers (65802/65816 only, x = 0): Data decremented is sixteen-bit.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of result is set; else cleared
 *   z: Set if result is zero; else cleared
@@ -692,17 +697,17 @@ DEY                                                                             
 
 Decrement Index Register Y
 
-Decrement by one the contents of index register Y (subtract one from the value).This is a special
-purpose, implied addressing form of the DEC instruction.Unlike using SBC to subtract a one from the
-value, the DEY instruction does notaffect the carry flag; you can test for wraparound only by
+Decrement by one the contents of index register Y (subtract one from the value). This is a special
+purpose, implied addressing form of the DEC instruction. Unlike using SBC to subtract a one from the
+value, the DEY instruction does not affect the carry flag; you can test for wraparound only by
 testing after every decrement to see if the value is zero or negative. On the other hand, you don't
-need toset the carry before decrementing.
+need to set the carry before decrementing.
 DEY is unaffected by the setting of the d (decimal) flag.
 
 *   8-bit index registers (all processors): Data decremented is eight-bit.
 *   16-bit index registers (65802/65816 only, x = 0): Data decremented is sixteen-bit.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of result is set; else cleared
 *   z: Set if result is zero; else cleared
@@ -712,21 +717,21 @@ EOR                                                                             
 
 Exclusive-OR Accumulator with Memory
 
-Bitwise logical Exclusive-OR the data located at the effective address specified bythe operand with
-the contents of the accumulator. Each bit in the accumulator isexclusive-ORed with the corresponding
-bit in memory, and the result is stored intothe same accumulator bit.
+Bitwise logical Exclusive-OR the data located at the effective address specified by the operand with
+the contents of the accumulator. Each bit in the accumulator is exclusive-ORed with the
+corresponding bit in memory, and the result is stored into the same accumulator bit.
 
 The truth table for the logical exclusive-OR operation is:
 │xor│ 0 │ 1 │
 │ 0 │ 0 │ 1 │
 │ 1 │ 1 │ 0 │
 
-*   8-bit accumulator (all processors): Data exclusive-ORed from memory is eight-bit.
+*   8-bit accumulator (all processors): Data exclusive-ORed from memory is eight- bit.
 *   16-bit accumulator (65802/65816 only, m = 0): Data exclusive-ORed from memory is sixteen-bit: the
-    low-order eight bits are located at the effective address; thehigh-order eight bits are located at
+    low-order eight bits are located at the effective address; the high-order eight bits are located at
     the effective address plus one.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of result is set; else cleared
 *   z: Set if result is zero; else cleared
@@ -736,18 +741,18 @@ INC                                                                             
 
 Increment
 
-Increment by one the contents of the location specified by the operand (add oneto the value).
+Increment by one the contents of the location specified by the operand (add one to the value).
 Unlike adding a one with the ADC instruction, however, the increment instruction is neither affected
-by nor affects the carry flag. You can test for wraparoundonly by testing after every increment to
-see if the result is zero or positive. On theother hand, you don't have to clear the carry before
-incrementing.The INC instruction is unaffected by the d (decimal) flag.
+by nor affects the carry flag. You can test for wraparound only by testing after every increment to
+see if the result is zero or positive. On the other hand, you don't have to clear the carry before
+incrementing. The INC instruction is unaffected by the d (decimal) flag.
 
 *   8-bit accumulator/memory (all processors): Data incremented is eight-bit.
-*   16-bit accumulator/memory (65802/65816 only, m = 0): Data incremented issixteen-bit: if in memory,
-    the low-order eight bits are located at the effectiveaddress; the high-order eight-bits are located
-    at the effective address plus one.
+*   16-bit accumulator/memory (65802/65816 only, m = 0): Data incremented is sixteen-bit: if in
+    memory, the low-order eight bits are located at the effective address; the high-order eight-bits are
+    located at the effective address plus one.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of result is set; else cleared
 *   z: Set if result is zero; else cleared
@@ -757,16 +762,16 @@ INX                                                                             
 
 Increment Index Register X
 
-Increment by one the contents of index register X (add one to the value). This is aspecial purpose,
-implied addressing form of the INC instruction.Unlike using ADC to add a one to the value, the INX
-instruction does not affectthe carry flag. You can execute it without first clearing the carry. But
-you can testfor wraparound only by testing after every increment to see if the result is zero
-orpositive. The INX instruction is unaffected by the d (decimal) flag.
+Increment by one the contents of index register X (add one to the value). This is a special purpose,
+implied addressing form of the INC instruction. Unlike using ADC to add a one to the value, the INX
+instruction does not affect the carry flag. You can execute it without first clearing the carry. But
+you can test for wraparound only by testing after every increment to see if the result is zero or
+positive. The INX instruction is unaffected by the d (decimal) flag.
 
 *   8-bit index registers (all processors): Data incremented is eight-bit.
 *   16-bit index registers (65802/65816 only, x = 0): Data incremented is sixteen-bit.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of result is set; else cleared
 *   z: Set if result is zero; else cleared
@@ -776,16 +781,16 @@ INY                                                                             
 
 Increment Index Register Y
 
-Increment by one the contents of index register Y (add one to the value). This is aspecial purpose,
-implied addressing form of the INC instruction.Unlike using ADC to add one to the value, the INY
-instruction does not affectthe carry flag. You can execute it without first clearing the carry. But
-you can testfor wraparound only by testing after every increment to see if the value is zero
-orpositive. The INY instruction is unaffected by the d (decimal) flag.
+Increment by one the contents of index register Y (add one to the value). This is a special purpose,
+implied addressing form of the INC instruction. Unlike using ADC to add one to the value, the INY
+instruction does not affect the carry flag. You can execute it without first clearing the carry. But
+you can test for wraparound only by testing after every increment to see if the value is zero or
+positive. The INY instruction is unaffected by the d (decimal) flag.
 
 *   8-bit index registers (all processors): Data incremented is eight-bit.
 *   16-bit index registers (65802/65816 only, x = 0): Data incremented is sixteen-bit.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of result is set; else cleared
 *   z: Set if result is zero; else cleared
@@ -795,11 +800,11 @@ JMP                                                                             
 
 Jump
 
-Transfer control to the address specified by the operand field.The program counter is loaded with
-the target address. If a long JMP is executed,the program counter bank is loaded from the third byte
-of the target address specified by the operand.
+Transfer control to the address specified by the operand field. The program counter is loaded with
+the target address. If a long JMP is executed, the program counter bank is loaded from the third
+byte of the target address specified by the operand.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 JSL                                                                                         *ca65-jsl*
@@ -807,52 +812,53 @@ JSL                                                                             
 Jump to Subroutine Long
 
 Jump-to-subroutine with long (24-bit) addressing: transfer control to the subroutine at the 24-bit
-address which is the operand, after first pushing a 24-bit (long)return address onto the stack. This
-return address is the address of the last instruction byte (the fourth instruction byte, or the
-third operand byte), not the address ofthe next instruction; it is the return address minus one.
-The current program counter bank is pushed onto the stack first, then the high-order byte of the
-return address and then the low-order byte of the address arepushed on the stack in standard 65x
-order (low byte in the lowest address, bankbyte in the highest address). The stack pointer is
-adjusted after each byte is pushedto point to the next lower byte (the next available stack
-location). The programcounter bank register and program counter are then loaded with the operand
+address which is the operand, after first pushing a 24-bit (long) return address onto the stack.
+This return address is the address of the last instruction byte (the fourth instruction byte, or the
+third operand byte), not the address of the next instruction; it is the return address minus one.
+The current program counter bank is pushed onto the stack first, then the high- order byte of the
+return address and then the low-order byte of the address are pushed on the stack in standard 65x
+order (low byte in the lowest address, bank byte in the highest address). The stack pointer is
+adjusted after each byte is pushed to point to the next lower byte (the next available stack
+location). The program counter bank register and program counter are then loaded with the operand
 values, and control is transferred to the specified location.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 JSR                                                                                         *ca65-jsr*
 
 Jump to Subroutine
 
-Transfer control to the subroutine at the location specified by the operand, afterfirst pushing onto
-the stack, as a return address, the current program countervalue, that is, the address of the last
-instruction byte (the third byte of a three-byteinstruction, the fourth byte of a four-byte
-instruction), not the address of the nextinstruction.
-If an absolute operand is coded and is less than or equal to $FFFF, absoluteaddressing is assumed by
-the assembler; if the value is greater than $FFFF, absolutelong addressing is used.
-If long addressing is used, the current program counter bank is pushed onto thestack first. Next—or
-first in the more normal case of intra-bank addressing—thehigh order byte of the return address is
-pushed, followed by the low order byte.This leaves it on the stack in standard 65x order (lowest
-byte at the lowest address,highest byte at the highest address). After the return address is pushed,
-the stackpointer points to the next available location (next lower byte) on the stack. Finally,the
-program counter (and, in the case of long addressing, the program counterbank register) is loaded
-with the values specified by the operand, and control istransferred to the target location.
+Transfer control to the subroutine at the location specified by the operand, after first pushing
+onto the stack, as a return address, the current program counter value, that is, the address of the
+last instruction byte (the third byte of a three-byte instruction, the fourth byte of a four-byte
+instruction), not the address of the next instruction.
+If an absolute operand is coded and is less than or equal to $FFFF, absolute addressing is assumed
+by the assembler; if the value is greater than $FFFF, absolute long addressing is used.
+If long addressing is used, the current program counter bank is pushed onto the stack first. Next—or
+first in the more normal case of intra-bank addressing—the high order byte of the return address is
+pushed, followed by the low order byte. This leaves it on the stack in standard 65x order (lowest
+byte at the lowest address, highest byte at the highest address). After the return address is
+pushed, the stack pointer points to the next available location (next lower byte) on the stack.
+Finally, the program counter (and, in the case of long addressing, the program counter bank
+register) is loaded with the values specified by the operand, and control is transferred to the
+target location.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 LDA                                                                                         *ca65-lda*
 
 Load Accumulator from Memory
 
-Load the accumulator with the data located at the effective address specified bythe operand.
+Load the accumulator with the data located at the effective address specified by the operand.
 
 *   8-bit accumulator (all processors): Data is eight-bit.
-*   16-bit accumulator (65802/65816 only, m = 0): Data is sixteen-bit; the low-ordereight bits are
-    located at the effective address; the high-order eight bits are located atthe effective address plus
-    one.
+*   16-bit accumulator (65802/65816 only, m = 0): Data is sixteen-bit; the low-order eight bits are
+    located at the effective address; the high-order eight bits are located at the effective address
+    plus one.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of loaded value is set; else cleared
 *   z: Set if value loaded is zero; else cleared
@@ -862,14 +868,14 @@ LDX                                                                             
 
 Load Index Register X from Memory
 
-Load index register X with the data located at the effective address specified bythe operand.
+Load index register X with the data located at the effective address specified by the operand.
 
 *   8-bit index registers (all processors): Data is eight-bit.
-*   16-bit index registers (65802/65816 only, x = 0): Data is sixteen-bit: the low-order eight bits
-    are located at the effective address; the high-order eight bits arelocated at the effective address
+*   16-bit index registers (65802/65816 only, x = 0): Data is sixteen-bit: the low- order eight bits
+    are located at the effective address; the high-order eight bits are located at the effective address
     plus one.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of loaded value is set; else cleared
 *   z: Set if value loaded is zero; else cleared
@@ -879,14 +885,14 @@ LDY                                                                             
 
 Load Index Register Y from Memory
 
-Load index register Y with the data located at the effective address specified bythe operand.
+Load index register Y with the data located at the effective address specified by the operand.
 
 *   8-bit index registers (all processors): Data is eight-bit.
-*   16-bit index registers (65802/65816 only, x = 0): Data is sixteen-bit: the low-order eight bits
-    are located at the effective address; the high-order eight bits arelocated at the effective address
+*   16-bit index registers (65802/65816 only, x = 0): Data is sixteen-bit: the low- order eight bits
+    are located at the effective address; the high-order eight bits are located at the effective address
     plus one.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of loaded value is set; else cleared
 *   z: Set if value loaded is zero; else cleared
@@ -896,11 +902,11 @@ LSR                                                                             
 
 Logical Shift Memory or Accumulator Right
 
-Logical shift the contents of the location specified by the operand right one bit.That is, bit zero
-takes on the value originally found in bit one, bit one takes thevalue originally found in bit two,
-and so on; the leftmost bit (bit 7 if the m memoryselect flag is one when the instruction is
-executed or bit 15 if it is zero) is cleared;the rightmost bit, bit zero, is transferred to the
-carry flag. This is the arithmeticequivalent of unsigned division by two.
+Logical shift the contents of the location specified by the operand right one bit. That is, bit zero
+takes on the value originally found in bit one, bit one takes the value originally found in bit two,
+and so on; the leftmost bit (bit 7 if the m memory select flag is one when the instruction is
+executed or bit 15 if it is zero) is cleared; the rightmost bit, bit zero, is transferred to the
+carry flag. This is the arithmetic equivalent of unsigned division by two.
 >
          ↷ ↷ ↷ ↷ ↷ ↷ ↷        
     0 → 1 0 1 1 0 0 1 1 ↴
@@ -908,11 +914,11 @@ carry flag. This is the arithmeticequivalent of unsigned division by two.
 <
 
 *   8-bit accumulator/memory (all processors): Data shifted is eight-bit.
-*   16-bit accumulator/memory (65802/65816 only, m = 0): Data shifted is sixteen-bit: if in memory,
-    the low-order eight bits are located at the effective address; thehigh-order eight bits are located
+*   16-bit accumulator/memory (65802/65816 only, m = 0): Data shifted is sixteen- bit: if in memory,
+    the low-order eight bits are located at the effective address; the high-order eight bits are located
     at the effective address plus one.
 
-Affected Flags:n - - - - - z c
+Affected Flags: n - - - - - z c
 
 *   n: Cleared
 *   z: Set if result is zero; else cleared
@@ -923,76 +929,76 @@ MVN                                                                             
 
 Block Move Next
 
-Moves (copies) a block of memory to a new location. The source, destinationand length operands of
-this instruction are taken from the X, Y, and C (doubleaccumulator) registers; these should be
-loaded with the correct values before executing the MVN instruction.The source address for MVN,
-taken from the X register, should be the startingaddress (lowest in memory) of the block to be
-moved. The destination address, inthe Y register, should be the new starting address for the moved
-block. The length,loaded into the double accumulator (the value in C is always used, regardless of
-thesetting of the m flag) should be the length of the block to be moved minus one; if Ccontains
-$0005, six bytes will be moved. The two operand bytes of the MVNinstruction specify the banks
-holding the two blocks of memory: the first operandbyte (of object code) specifies the destination
-bank; the second operand byte specifies the source bank.The execution sequence is: the first byte is
-moved from the address in X to theaddress in Y; then X and Y are incremented, C is decremented, and
-the next byte ismoved; this process continues until the number of bytes specified by the value in
-Cplus one is moved. In other words, until the value in C is $FFFF.If the source and destination
-blocks do not overlap, then the source blockremains intact after it has been copied to the
+Moves (copies) a block of memory to a new location. The source, destination and length operands of
+this instruction are taken from the X, Y, and C (double accumulator) registers; these should be
+loaded with the correct values before executing the MVN instruction. The source address for MVN,
+taken from the X register, should be the starting address (lowest in memory) of the block to be
+moved. The destination address, in the Y register, should be the new starting address for the moved
+block. The length, loaded into the double accumulator (the value in C is always used, regardless of
+the setting of the m flag) should be the length of the block to be moved minus one; if C contains
+$0005, six bytes will be moved. The two operand bytes of the MVN instruction specify the banks
+holding the two blocks of memory: the first operand byte (of object code) specifies the destination
+bank; the second operand byte specifies the source bank. The execution sequence is: the first byte
+is moved from the address in X to the address in Y; then X and Y are incremented, C is decremented,
+and the next byte is moved; this process continues until the number of bytes specified by the value
+in C plus one is moved. In other words, until the value in C is $FFFF. If the source and destination
+blocks do not overlap, then the source block remains intact after it has been copied to the
 destination.
-If the source and destination blocks do overlap, then MVN should be used onlyif the destination is
-lower than the source to avoid overwriting source bytes beforethey've been copied to the
-destination. If the destination is higher, then the MVPinstruction should be used instead.
-When execution is complete, the value in C is $FFFF, registers X and Y each pointone byte past the
-end of the blocks to which they were pointing, and the data bankregister holds the destination bank
-value (the first operand byte).Assembler syntax for the block move instruction calls for the operand
-field to becoded as two addresses, source first, then destination—the more intuitive ordering,but
-the opposite of the actual operand order in the object code. The assemblerstrips the bank bytes from
-the addresses (ignoring the rest) and reverses them toobject code order. If a block move instruction
-is interrupted, it may be resumedautomatically via execution of an RTI if all of the registers are
-restored or intact.The value pushed onto the stack when a block move is interrupted is the address
-ofthe block move instruction. The current byte-move is completed before the interrupt is serviced.If
-the index registers are in eight-bit mode (x = 1), or the processor is in 6502emulation mode (e =
-1), then the blocks being specified must necessarily be inpage zero since the high bytes of the
-index registers will contain zeroes.
+If the source and destination blocks do overlap, then MVN should be used only if the destination is
+lower than the source to avoid overwriting source bytes before they've been copied to the
+destination. If the destination is higher, then the MVP instruction should be used instead.
+When execution is complete, the value in C is $FFFF, registers X and Y each point one byte past the
+end of the blocks to which they were pointing, and the data bank register holds the destination bank
+value (the first operand byte). Assembler syntax for the block move instruction calls for the
+operand field to be coded as two addresses, source first, then destination—the more intuitive
+ordering, but the opposite of the actual operand order in the object code. The assembler strips the
+bank bytes from the addresses (ignoring the rest) and reverses them to object code order. If a block
+move instruction is interrupted, it may be resumed automatically via execution of an RTI if all of
+the registers are restored or intact. The value pushed onto the stack when a block move is
+interrupted is the address of the block move instruction. The current byte-move is completed before
+the interrupt is serviced. If the index registers are in eight-bit mode (x = 1), or the processor is
+in 6502 emulation mode (e = 1), then the blocks being specified must necessarily be in page zero
+since the high bytes of the index registers will contain zeroes.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 MVP                                                                                         *ca65-mvp*
 
 Block Move Previous
 
-Moves (copies) a block of memory to a new location. The source, destinationand length operands of
-this instruction are taken from the X, Y, and C (doubleaccumulator) registers; these should be
-loaded with the correct values before executing the MVP instruction.The source address for MVP,
-taken from the X register, should be the endingaddress (highest in memory) of the block to be moved.
-The destination address, inthe Y register, should be the new ending address for the moved block. The
-length,loaded into the double accumulator (the value in C is always used, regardless of thesetting
-of the m flag) should be the length of the block to be moved minus one; if Ccontains $0005, six
-bytes will be moved. The two operand bytes of the MVPinstruction specify the banks holding the two
-blocks of memory: the first operandbyte (of object code) specifies the destination bank; the second
-operand byte specifies the source bank.The execution sequence is: the first byte is moved from the
-address in X to theaddress in Y; then X and Y are decremented, C is decremented, and the
-previousbyte is moved; this process continues until the number of bytes specified by thevalue in C
-plus one is moved. In other words, until the value in C is $FFFF.If the source and destination
-blocks do not overlap, then the source blockremains intact after it has been copied to the
-destination.
-If the source and destination blocks do overlap, then MVP should be used only ifthe destination is
-higher than the source to avoid overwriting source bytes beforethey've been copied to the
-destination. If the destination is lower, then the MVNinstruction should be used instead.
-When execution is complete, the value in C is SFFFF, registers X and Y each pointone byte past the
-beginning of the blocks to which they were pointing, and the databank register holds the destination
-bank value (the first operand byte).Assembler syntax for the block move instruction calls for the
-operand field to becoded as two addresses, source first, then destination—the more intuitive
-ordering,but the opposite of the actual operand order in the object code. The assemblerstrips the
-bank bytes from the addresses (ignoring the rest) and reverses them toobject code order. If a block
-move instruction is interrupted, it may be resumedautomatically via execution of an RTI if all of
-the registers are restored or intact.The value pushed onto the stack when a block move is
-interrupted is the address ofthe block move instruction. The current byte-move is completed before
-the interrupt is serviced.If the index registers are in eight-bit mode (x = 1), or the processor is
-in 6502emulation mode (e = 1), then the blocks being specified must necessarily be inpage zero since
-the high bytes of the index registers will contain zeroes.
+Moves (copies) a block of memory to a new location. The source, destination and length operands of
+this instruction are taken from the X, Y, and C (double accumulator) registers; these should be
+loaded with the correct values before executing the MVP instruction. The source address for MVP,
+taken from the X register, should be the ending address (highest in memory) of the block to be
+moved. The destination address, in the Y register, should be the new ending address for the moved
+block. The length, loaded into the double accumulator (the value in C is always used, regardless of
+the setting of the m flag) should be the length of the block to be moved minus one; if C contains
+$0005, six bytes will be moved. The two operand bytes of the MVP instruction specify the banks
+holding the two blocks of memory: the first operand byte (of object code) specifies the destination
+bank; the second operand byte specifies the source bank. The execution sequence is: the first byte
+is moved from the address in X to the address in Y; then X and Y are decremented, C is decremented,
+and the previous byte is moved; this process continues until the number of bytes specified by the
+value in C plus one is moved. In other words, until the value in C is $FFFF. If the source and
+destination blocks do not overlap, then the source block remains intact after it has been copied to
+the destination.
+If the source and destination blocks do overlap, then MVP should be used only if the destination is
+higher than the source to avoid overwriting source bytes before they've been copied to the
+destination. If the destination is lower, then the MVN instruction should be used instead.
+When execution is complete, the value in C is SFFFF, registers X and Y each point one byte past the
+beginning of the blocks to which they were pointing, and the data bank register holds the
+destination bank value (the first operand byte). Assembler syntax for the block move instruction
+calls for the operand field to be coded as two addresses, source first, then destination—the more
+intuitive ordering, but the opposite of the actual operand order in the object code. The assembler
+strips the bank bytes from the addresses (ignoring the rest) and reverses them to object code order.
+If a block move instruction is interrupted, it may be resumed automatically via execution of an RTI
+if all of the registers are restored or intact. The value pushed onto the stack when a block move is
+interrupted is the address of the block move instruction. The current byte-move is completed before
+the interrupt is serviced. If the index registers are in eight-bit mode (x = 1), or the processor is
+in 6502 emulation mode (e = 1), then the blocks being specified must necessarily be in page zero
+since the high bytes of the index registers will contain zeroes.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 NOP                                                                                         *ca65-nop*
@@ -1000,14 +1006,14 @@ NOP                                                                             
 No Operation
 
 Executing a NOP takes no action; it has no effect on any 65x registers or memory, except the program
-counter, which is incremented once to point to the nextinstruction.
-Its primary uses are during debugging, where it is used to "patch out" unwantedcode, or as a
-place-holder, included in the assembler source, where you anticipateyou may have to "patch in"
-instructions, and want to leave a "hole" for the patch.NOP may also be used to expand timing
-loops—each NOP instruction takes twocycles to execute, so adding one or more may help fine tune a
+counter, which is incremented once to point to the next instruction.
+Its primary uses are during debugging, where it is used to "patch out" unwanted code, or as a
+place-holder, included in the assembler source, where you anticipate you may have to "patch in"
+instructions, and want to leave a "hole" for the patch. NOP may also be used to expand timing
+loops—each NOP instruction takes two cycles to execute, so adding one or more may help fine tune a
 timing loop.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 ORA                                                                                         *ca65-ora*
@@ -1015,22 +1021,22 @@ ORA                                                                             
 OR Accumulator with Memory
 
 Bitwise logical OR the data located at the effective address specified by the operand with the
-contents of the accumulator. Each bit in the accumulator is ORed withthe corresponding bit in
-memory. The result is stored into the same accumulatorbit.
+contents of the accumulator. Each bit in the accumulator is ORed with the corresponding bit in
+memory. The result is stored into the same accumulator bit.
 
 The truth table for the logical OR operation is:
 │ or│ 0 │ 1 │
 │ 0 │ 0 │ 1 │
 │ 1 │ 1 │ 1 │
 
-A 1 or logical true results if either of the two operands of the OR operation istrue.
+A 1 or logical true results if either of the two operands of the OR operation is true.
 
 *   8-bit accumulator (all processors): Data ORed from memory is eight-bit.
-*   16-bit accumulator (65802/65816 only, m = 0): Data ORed from memory issixteen-bit: the low-order
-    eight bits are located at the effective address; the high-order eight bits are located at the
+*   16-bit accumulator (65802/65816 only, m = 0): Data ORed from memory is sixteen-bit: the low-order
+    eight bits are located at the effective address; the high- order eight bits are located at the
     effective address plus one.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of result is set; else cleared
 *   z: Set if result is zero; else cleared
@@ -1040,35 +1046,35 @@ PEA                                                                             
 
 Push Effective Absolute Address
 
-Push the sixteen-bit operand (typically an absolute address) onto the stack. Thestack pointer is
-decremented twice. This operation always pushes sixteen bits ofdata, irrespective of the settings of
-the m and x mode select flags.Although the mnemonic suggests that the sixteen-bit value pushed on
-the stackbe considered an address, the instruction may also be considered a "push
-sixteen-bitimmediate data" instruction, although the syntax of immediate addressing is notused. The
-assembler syntax is that of the absolute addressing mode, that is, a labelor sixteen-bit value in
-the operand field. Unlike all other instructions that use thisassembler syntax, the effective
-address itself, rather than the data stored at theeffective address, is what is accessed (and in
-this case, pushed onto the stack).
+Push the sixteen-bit operand (typically an absolute address) onto the stack. The stack pointer is
+decremented twice. This operation always pushes sixteen bits of data, irrespective of the settings
+of the m and x mode select flags. Although the mnemonic suggests that the sixteen-bit value pushed
+on the stack be considered an address, the instruction may also be considered a "push sixteen-bit
+immediate data" instruction, although the syntax of immediate addressing is not used. The assembler
+syntax is that of the absolute addressing mode, that is, a label or sixteen-bit value in the operand
+field. Unlike all other instructions that use this assembler syntax, the effective address itself,
+rather than the data stored at the effective address, is what is accessed (and in this case, pushed
+onto the stack).
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 PEI                                                                                         *ca65-pei*
 
 Push Effective Indirect Address
 
-Push the sixteen-bit value located at the address formed by adding the directpage offset specified
-by the operand to the direct page register. The mnemonicimplies that the sixteen-bit data pushed is
-considered an address, although it can beany sixteen-bit data. This operation always pushes sixteen
-bits of data, irrespectiveof the settings of the m and x mode select flags.
-The first byte pushed is the byte at the direct page offset plus one (the high byteof the double
+Push the sixteen-bit value located at the address formed by adding the direct page offset specified
+by the operand to the direct page register. The mnemonic implies that the sixteen-bit data pushed is
+considered an address, although it can be any sixteen-bit data. This operation always pushes sixteen
+bits of data, irrespective of the settings of the m and x mode select flags.
+The first byte pushed is the byte at the direct page offset plus one (the high byte of the double
 byte stored at the direct page offset). The byte at the direct page offset itself (the low byte) is
-pushed next. The stack pointer now points to the nextavailable stack location, directly below the
-last byte pushed.The assembler syntax is that of direct page indirect; however, unlike
-otherinstructions which use this assembler syntax, the effective indirect address, ratherthan the
-data stored at that address, is what is accessed and pushed onto the stack.
+pushed next. The stack pointer now points to the next available stack location, directly below the
+last byte pushed. The assembler syntax is that of direct page indirect; however, unlike other
+instructions which use this assembler syntax, the effective indirect address, rather than the data
+stored at that address, is what is accessed and pushed onto the stack.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 PER                                                                                         *ca65-per*
@@ -1076,27 +1082,28 @@ PER                                                                             
 Push Effective PC Relative Indirect Address
 
 Add the current value of the program counter to the sixteen-bit signed displacement in the operand,
-and push the result on the stack. This operation alwayspushes sixteen bits of data, irrespective of
-the settings of the m and x mode selectflags.
-The high byte of the sum is pushed first, then the low byte is pushed. After theinstruction is
+and push the result on the stack. This operation always pushes sixteen bits of data, irrespective of
+the settings of the m and x mode select flags.
+The high byte of the sum is pushed first, then the low byte is pushed. After the instruction is
 completed, the stack pointer points to the next available stack location, immediately below the last
-byte pushed.Because PER's operand is a displacement relative to the current value of the program
-counter (as with the branch instructions), this instruction is helpful in writingself-relocatable
-code in which an address within the program (typically of a dataarea) must be accessed. The address
-pushed onto the stack will be the run-timeaddress of the data area, regardless of where the program
-was loaded in memory; itmay be pulled into a register, stored in an indirect pointer, or used on the
-stackwith the stack relative indirect indexed addressing mode to access the data at thatlocation.
-As is the case with the branch instructions, the syntax used is to specify as theoperand the label
-of the data area you want to reference. This location must be inthe program bank, since the
-displacement is relative to the program counter. Theassembler converts the assembly-time label into
-a displacement from the assemblytime address of the next instruction.The value of the program
-counter used in the addition is the address of the nextinstruction, that is, the instruction
-following the PER instruction.PER may also be used to push return addresses on the stack, either as
-part of asimulated branch-to-subroutine or to place the return address beneath the stackedparameters
-to a subroutine call; always remember that a pushed return addressshould be the desired return
-address minus one.
+byte pushed. Because PER's operand is a displacement relative to the current value of the program
+counter (as with the branch instructions), this instruction is helpful in writing self-relocatable
+code in which an address within the program (typically of a data area) must be accessed. The address
+pushed onto the stack will be the run-time address of the data area, regardless of where the program
+was loaded in memory; it may be pulled into a register, stored in an indirect pointer, or used on
+the stack with the stack relative indirect indexed addressing mode to access the data at that
+location.
+As is the case with the branch instructions, the syntax used is to specify as the operand the label
+of the data area you want to reference. This location must be in the program bank, since the
+displacement is relative to the program counter. The assembler converts the assembly-time label into
+a displacement from the assemblytime address of the next instruction. The value of the program
+counter used in the addition is the address of the next instruction, that is, the instruction
+following the PER instruction. PER may also be used to push return addresses on the stack, either as
+part of a simulated branch-to-subroutine or to place the return address beneath the stacked
+parameters to a subroutine call; always remember that a pushed return address should be the desired
+return address minus one.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 PHA                                                                                         *ca65-pha*
@@ -1105,13 +1112,13 @@ Push Accumulator
 
 Push the accumulator onto the stack. The accumulator itself is unchanged.
 
-*   8-bit accumulator (all processors): The single byte contents of the accumulatorare pushed—they are
-    stored to the location pointed to by the stack pointer and thestack pointer is decremented.
-*   16-bit accumulator (65802/65816 only, m = 0): Both accumulator bytes arepushed. The high byte is
-    pushed first, then the low byte. The stack pointer nowpoints to the next available stack location,
+*   8-bit accumulator (all processors): The single byte contents of the accumulator are pushed—they
+    are stored to the location pointed to by the stack pointer and the stack pointer is decremented.
+*   16-bit accumulator (65802/65816 only, m = 0): Both accumulator bytes are pushed. The high byte is
+    pushed first, then the low byte. The stack pointer now points to the next available stack location,
     directly below the last byte pushed.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 PHB                                                                                         *ca65-phb*
@@ -1119,31 +1126,31 @@ PHB                                                                             
 Push Data Bank Register
 
 Push the contents of the data bank register onto the stack.
-The single-byte contents of the data bank register are pushed onto the stack; thestack pointer now
-points to the next available stack location, directly below thebyte pushed. The data bank register
+The single-byte contents of the data bank register are pushed onto the stack; the stack pointer now
+points to the next available stack location, directly below the byte pushed. The data bank register
 itself is unchanged. Since the data bank register is an eight-bit register, only one byte is pushed
-onto the stack, regardless of thesettings of the m and x mode select flags.
-While the 65816 always generates 24-bit addresses, most memory references arespecified by a
+onto the stack, regardless of the settings of the m and x mode select flags.
+While the 65816 always generates 24-bit addresses, most memory references are specified by a
 sixteen-bit address. These addresses are concatenated with the contents of the data bank register to
-form a full 24-bit address. This instruction lets thecurrent value of the data bank register be
+form a full 24-bit address. This instruction lets the current value of the data bank register be
 saved prior to loading a new value.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 PHD                                                                                         *ca65-phd*
 
 Push Direct Page Register
 
-Push the contents of the direct page register D onto the stack.Since the direct page register is
-always a sixteen-bit register, this is always asixteen-bit operation, regardless of the settings of
-the m and x mode select flags.The high byte of the direct page register is pushed first, then the
-low byte. Thedirect page register itself is unchanged. The stack pointer now points to the
-nextavailable stack location, directly below the last byte pushed.By pushing the D register onto the
+Push the contents of the direct page register D onto the stack. Since the direct page register is
+always a sixteen-bit register, this is always a sixteen-bit operation, regardless of the settings of
+the m and x mode select flags. The high byte of the direct page register is pushed first, then the
+low byte. The direct page register itself is unchanged. The stack pointer now points to the next
+available stack location, directly below the last byte pushed. By pushing the D register onto the
 stack, the local environment of a calling subroutine may easily be saved by a called subroutine
-before modifying the D registerto provide itself with its own direct page memory.
+before modifying the D register to provide itself with its own direct page memory.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 PHK                                                                                         *ca65-phk*
@@ -1151,65 +1158,65 @@ PHK                                                                             
 Push Program Bank Register
 
 Push the program bank register onto the stack.
-The single-byte contents of the program bank register are pushed. The programbank register itself is
-unchanged. The stack pointer now points to the next availablestack location, directly below the byte
-pushed. Since the program bank register isan eight-bit register, only one byte is pushed onto the
-stack, regardless of the settings of the m and x mode select flags.While the 65816 always generates
-24-bit addresses, most jumps and branchesspecify only a sixteen-bit address. These addresses are
-concatenated with the contents of the program bank register to form a full 24-bit address. This
-instruction letsyou determine the current value of the program bank register—for example, if youwant
-the data bank to be set to the same value as the program bank.
+The single-byte contents of the program bank register are pushed. The program bank register itself
+is unchanged. The stack pointer now points to the next available stack location, directly below the
+byte pushed. Since the program bank register is an eight-bit register, only one byte is pushed onto
+the stack, regardless of the settings of the m and x mode select flags. While the 65816 always
+generates 24-bit addresses, most jumps and branches specify only a sixteen-bit address. These
+addresses are concatenated with the contents of the program bank register to form a full 24-bit
+address. This instruction lets you determine the current value of the program bank register—for
+example, if you want the data bank to be set to the same value as the program bank.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 PHP                                                                                         *ca65-php*
 
 Push Processr Status Register
 
-Push the contents of the processor status register P onto the stack.Since the status register is
-always an eight-bit register, this is always an eight-bitoperation, regardless of the settings of
+Push the contents of the processor status register P onto the stack. Since the status register is
+always an eight-bit register, this is always an eight-bit operation, regardless of the settings of
 the m and x mode select flags on the 65802/
-65816. The status register contents are not changed by the operation. The stackpointer now points to
-the next available stack location, directly below the bytepushed.
+65816. The status register contents are not changed by the operation. The stack pointer now points
+to the next available stack location, directly below the byte pushed.
     This provides the means for saving either the current mode settings or a particular set of
-status flags so they may be restored or in some other way used later.    Note, however, that the e
-bit (the 6502 emulation mode flag on the 65802/65816)is not pushed onto the stack or otherwise
-accessed or saved. The only access to thee flag is via the XCE instruction.
+status flags so they may be restored or in some other way used later.     Note, however, that the e
+bit (the 6502 emulation mode flag on the 65802/65816) is not pushed onto the stack or otherwise
+accessed or saved. The only access to the e flag is via the XCE instruction.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 PHX                                                                                         *ca65-phx*
 
 Push Index Register
 
-Push the contents of the X index register onto the stack. The register itself isunchanged.
+Push the contents of the X index register onto the stack. The register itself is unchanged.
 
-*   8-bit index registers (all processors): The eight-bit contents of the index registerare pushed
-    onto the stack. The stack pointer now points to the next available stacklocation, directly below the
-    byte pushed.
-*   16-bit index registers (65802/65816 only, x = 0): The sixteen-bit contents of theindex register
-    are pushed. The high byte is pushed first, then the low byte. Thestack pointer now points to the
-    next available stack location, directly below the lastbyte pushed.
+*   8-bit index registers (all processors): The eight-bit contents of the index register are pushed
+    onto the stack. The stack pointer now points to the next available stack location, directly below
+    the byte pushed.
+*   16-bit index registers (65802/65816 only, x = 0): The sixteen-bit contents of the index register
+    are pushed. The high byte is pushed first, then the low byte. The stack pointer now points to the
+    next available stack location, directly below the last byte pushed.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 PHY                                                                                         *ca65-phy*
 
 Push Index Register
 
-Push the contents of the Y index register onto the stack. The register itself isunchanged.
+Push the contents of the Y index register onto the stack. The register itself is unchanged.
 
-*   8-bit index registers (all processors): The eight-bit contents of the index registerare pushed
-    onto the stack. The stack pointer now points to the next available stacklocation, directly below the
-    byte pushed.
-*   16-bit index registers (65802/65816 only, x = 0): The sixteen-bit contents of theindex register
-    are pushed. The high byte is pushed first, then the low byte. Thestack pointer now points to the
-    next available stack location, directly below the lastbyte pushed.
+*   8-bit index registers (all processors): The eight-bit contents of the index register are pushed
+    onto the stack. The stack pointer now points to the next available stack location, directly below
+    the byte pushed.
+*   16-bit index registers (65802/65816 only, x = 0): The sixteen-bit contents of the index register
+    are pushed. The high byte is pushed first, then the low byte. The stack pointer now points to the
+    next available stack location, directly below the last byte pushed.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 PLA                                                                                         *ca65-pla*
@@ -1219,13 +1226,13 @@ Pull Accumulator
 Pull the value on the top of the stack into the accumulator. The previous contents of the
 accumulator are destroyed.
 
-*   8-bit accumulator (all processors): The stack pointer is first incremented. Thenthe byte pointed
+*   8-bit accumulator (all processors): The stack pointer is first incremented. Then the byte pointed
     to by the stack pointer is loaded into the accumulator.
-*   16-bit accumulator (65802/65816 only, m = 0): Both accumulator bytes arepulled. The accumulator's
-    low byte is pulled first, then the high byte is pulled.Note that unlike some other microprocessors,
-    the 65x pull instructions set thenegative and zero flags.
+*   16-bit accumulator (65802/65816 only, m = 0): Both accumulator bytes are pulled. The accumulator's
+    low byte is pulled first, then the high byte is pulled. Note that unlike some other microprocessors,
+    the 65x pull instructions set the negative and zero flags.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of pulled value is set; else cleared
 *   z: Set if value pulled is zero; else cleared
@@ -1236,14 +1243,14 @@ PLB                                                                             
 Pull Data Bank Register
 
 Pull the eight-bit value on top of the stack into the data bank register B, switching the data bank
-to that value. All instructions which reference data that specifyonly sixteen-bit addresses will get
-their bank address from the value pulled into thedata bank register. This is the only instruction
-that can modify the data bank register.Since the bank register is an eight-bit register, only one
-byte is pulled from thestack, regardless of the settings of the m and x mode select flags. The stack
-pointeris first incremented. Then the byte pointed to by the stack pointer is loaded into
-theregister.
+to that value. All instructions which reference data that specify only sixteen-bit addresses will
+get their bank address from the value pulled into the data bank register. This is the only
+instruction that can modify the data bank register. Since the bank register is an eight-bit
+register, only one byte is pulled from the stack, regardless of the settings of the m and x mode
+select flags. The stack pointer is first incremented. Then the byte pointed to by the stack pointer
+is loaded into the register.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of pulled value is set; else cleared
 *   z: Set if value pulled is zero; else cleared
@@ -1253,15 +1260,15 @@ PLD                                                                             
 
 Pull Direct Page Register
 
-Pull the sixteen-bit value on top of the stack into the direct page register D,switching the direct
+Pull the sixteen-bit value on top of the stack into the direct page register D, switching the direct
 page to that value.
-PLD is typically used to restore the direct page register to a previous value.Since the direct page
-register is a sixteen-bit register, two bytes are pulled fromthe stack, regardless of the settings
-of the m and x mode select flags. The low byteof the direct page register is pulled first, then the
-high byte. The stack pointer nowpoints to where the high byte just pulled was stored; this is now
-the next availablestack location.
+PLD is typically used to restore the direct page register to a previous value. Since the direct page
+register is a sixteen-bit register, two bytes are pulled from the stack, regardless of the settings
+of the m and x mode select flags. The low byte of the direct page register is pulled first, then the
+high byte. The stack pointer now points to where the high byte just pulled was stored; this is now
+the next available stack location.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of pulled value is set; else cleared
 *   z: Set if value pulled is zero; else cleared
@@ -1271,19 +1278,19 @@ PLP                                                                             
 
 Pull Status Flags
 
-Pull the eight-bit value on the top of the stack into the processor status register P,switching the
+Pull the eight-bit value on the top of the stack into the processor status register P, switching the
 status byte to that value.
-Since the status register is an eight-bit register, only one byte is pulled from thestack,
+Since the status register is an eight-bit register, only one byte is pulled from the stack,
 regardless of the settings of the m and x mode select flags on the 65802/
-65816. The stack pointer is first incremented. Then the byte pointed to by the stackpointer is
+65816. The stack pointer is first incremented. Then the byte pointed to by the stack pointer is
 loaded into the status register.
 
 This provides the means for restoring either previous mode settings or a particular set of status
 flags that reflect the result of a previous operation.
-Note, however, that the e flag—the 6502 emulation mode flag on the 65802/65816—is not on the stack
-so cannot be pulled from it. The only means of settingthe e flag is the XCE instruction.
+Note, however, that the e flag—the 6502 emulation mode flag on the 65802/ 65816—is not on the stack
+so cannot be pulled from it. The only means of setting the e flag is the XCE instruction.
 
-Affected Flags: n v - b d i z c (6502, 65C02, 65802/65816 emulation mode e = 1)
+Affected Flags:  n v - b d i z c (6502, 65C02, 65802/65816 emulation mode e = 1)
                 n v m x d i z c (65802/65816 native mode e = 0)
 
 All flags are replaced by the values in the byte pulled from the stack.
@@ -1296,15 +1303,15 @@ Pull Index Register X from Stack
 Pull the value on the top of the stack into the X index register. The previous contents of the
 register are destroyed.
 
-*   8-bit index registers (all processors): The stack pointer is first incremented. Thenthe byte
+*   8-bit index registers (all processors): The stack pointer is first incremented. Then the byte
     pointed to by the stack pointer is loaded into the register.
-*   16-bit index registers (65802/65816 only, x = 0): Both bytes of the index registerare pulled.
-    First the low-order byte of the index register is pulled, then the high-order byte of the index
+*   16-bit index registers (65802/65816 only, x = 0): Both bytes of the index register are pulled.
+    First the low-order byte of the index register is pulled, then the high- order byte of the index
     register is pulled.
-    Unlike some other microprocessors, the 65x instructions to pull an index registeraffect the negative
-    and zero flags.
+    Unlike some other microprocessors, the 65x instructions to pull an index register affect the
+    negative and zero flags.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of pulled value is set; else cleared
 *   z: Set if value pulled is zero; else cleared
@@ -1317,15 +1324,15 @@ Pull Index Register Y from Stack
 Pull the value on the top of the stack into the Y index register. The previous contents of the
 register are destroyed.
 
-*   8-bit index registers (all processors): The stack pointer is first incremented. Thenthe byte
+*   8-bit index registers (all processors): The stack pointer is first incremented. Then the byte
     pointed to by the stack pointer is loaded into the register.
-*   16-bit index registers (65802/65816 only, x = 0): Both bytes of the index registerare pulled.
-    First the low-order byte of the index register is pulled, then the high-order byte of the index
+*   16-bit index registers (65802/65816 only, x = 0): Both bytes of the index register are pulled.
+    First the low-order byte of the index register is pulled, then the high- order byte of the index
     register is pulled.
-    Unlike some other microprocessors, the 65x instructions to pull an index registeraffect the negative
-    and zero flags.
+    Unlike some other microprocessors, the 65x instructions to pull an index register affect the
+    negative and zero flags.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of pulled value is set; else cleared
 *   z: Set if value pulled is zero; else cleared
@@ -1335,18 +1342,18 @@ REP                                                                             
 
 Reset Status Bits
 
-For each bit set to one in the operand byte, reset the corresponding bit in thestatus register to
-zero. For example, if bit three is set in the operand byte, bit threein the status register (the
-decimal flag) is reset to zero by this instruction. Zeroes inthe operand byte cause no change to
-their corresponding status register bits.This instruction lets you reset any flag or flags in the
-status register with a singletwo-byte instruction. Further, it is the only direct means of resetting
-several of theflags, including the m and x mode select flags (although instructions that pull the
-Pstatus register affect the m and x mode select flags).
+For each bit set to one in the operand byte, reset the corresponding bit in the status register to
+zero. For example, if bit three is set in the operand byte, bit three in the status register (the
+decimal flag) is reset to zero by this instruction. Zeroes in the operand byte cause no change to
+their corresponding status register bits. This instruction lets you reset any flag or flags in the
+status register with a single two-byte instruction. Further, it is the only direct means of
+resetting several of the flags, including the m and x mode select flags (although instructions that
+pull the P status register affect the m and x mode select flags).
 
-*   6502 emulation mode (65802/65816, e = l): Neither the break flag nor bit five(the 6502's undefined
-    flag bit) are affected by REP.
+*   6502 emulation mode (65802/65816, e = l): Neither the break flag nor bit five (the 6502's
+    undefined flag bit) are affected by REP.
 
-Affected Flags: n v - - d i z c (65802/65816 emulation mode e = 1)
+Affected Flags:  n v - - d i z c (65802/65816 emulation mode e = 1)
                 n v m x d i z c (65802/65816 native mode e = 0)
 
 All flags for which an operand bit is set are reset to zero.
@@ -1357,10 +1364,10 @@ ROL                                                                             
 
 Rotate Memory or Accumulator Left
 
-Rotate the contents of the location specified by the operand left one bit. Bit onetakes on the value
-originally found in bit zero, bit two takes the value originally inbit one, and so on; the rightmost
-bit, bit zero, takes the value in the carry flag; theleftmost bit (bit 7 on the 6502 and 65C02 or if
-m = 1 on the 65802/65816, or bit 15if m = 0) is transferred into the carry flag.
+Rotate the contents of the location specified by the operand left one bit. Bit one takes on the
+value originally found in bit zero, bit two takes the value originally in bit one, and so on; the
+rightmost bit, bit zero, takes the value in the carry flag; the leftmost bit (bit 7 on the 6502 and
+65C02 or if m = 1 on the 65802/65816, or bit 15 if m = 0) is transferred into the carry flag.
 >
      ↶ ↶ ↶ ↶ ↶ ↶ ↶
     1 0 1 1 0 0 1 1 ↰
@@ -1370,11 +1377,11 @@ m = 1 on the 65802/65816, or bit 15if m = 0) is transferred into the carry flag.
 <
 
 *   8-bit accumulator/memory (all processors): Data rotated is eight bits, plus carry.
-*   16-bit accumulator/memory (65802/65816 only, m = 0): Data rotated is sixteenbits, plus carry: if
-    in memory, the low-order eight bits are located at the effectiveaddress; the high eight bits are
+*   16-bit accumulator/memory (65802/65816 only, m = 0): Data rotated is sixteen bits, plus carry: if
+    in memory, the low-order eight bits are located at the effective address; the high eight bits are
     located at the effective address plus one.
 
-Affected Flags:n - - - - - z c
+Affected Flags: n - - - - - z c
 
 *   n: Set if most significant bit of result is set; else cleared
 *   z: Set if result is zero; else cleared
@@ -1385,10 +1392,10 @@ ROR                                                                             
 
 Rotate Memory or Accumulator Right
 
-Rotate the contents of the location specified by the operand right one bit. Bitzero takes on the
+Rotate the contents of the location specified by the operand right one bit. Bit zero takes on the
 value originally found in bit one, bit one takes the value originally in bit two, and so on; the
-leftmost bit (bit 7 on the 6502 and 65C02 or if m =1 on the 65802/65816, or bit 15 if m = 0) takes
-the value in the carry flag; therightmost bit, bit zero, is transferred into the carry flag.
+leftmost bit (bit 7 on the 6502 and 65C02 or if m = 1 on the 65802/65816, or bit 15 if m = 0) takes
+the value in the carry flag; the rightmost bit, bit zero, is transferred into the carry flag.
 >
      ↷ ↷ ↷ ↷ ↷ ↷ ↷
     1 0 1 1 0 0 1 1 ┐
@@ -1398,11 +1405,11 @@ the value in the carry flag; therightmost bit, bit zero, is transferred into the
 <
 
 *   8-bit accumulator/memory (all processors): Data rotated is eight bits, plus carry.
-*   16-bit accumulator/memory (65802/65816 only, m = 0): Data rotated is sixteenbits, plus carry: if
-    in memory, the low-order eight bits are located at the effectiveaddress; the high-order eight bits
+*   16-bit accumulator/memory (65802/65816 only, m = 0): Data rotated is sixteen bits, plus carry: if
+    in memory, the low-order eight bits are located at the effective address; the high-order eight bits
     are located at the effective address plus one.
 
-Affected Flags:n - - - - - z c
+Affected Flags: n - - - - - z c
 
 *   n: Set if most significant bit of result is set; else cleared
 *   z: Set if result is zero; else cleared
@@ -1413,28 +1420,28 @@ RTI                                                                             
 
 Return from Interrupt
 
-Pull the status register and the program counter from the stack. If the 65802/65816 is set to native
-mode (e = 0), also pull the program bank register from thestack.
-RTI pulls values off the stack in the reverse order they were pushed onto it byhardware or software
-interrupts. The RTI instruction, however, has no way ofknowing whether the values pulled off the
+Pull the status register and the program counter from the stack. If the 65802/ 65816 is set to
+native mode (e = 0), also pull the program bank register from the stack.
+RTI pulls values off the stack in the reverse order they were pushed onto it by hardware or software
+interrupts. The RTI instruction, however, has no way of knowing whether the values pulled off the
 stack into the status register and the program counter are valid—or even, for that matter, that an
-interrupt has everoccurred. It blindly pulls the first three (or four) bytes off the top of the
-stack andstores them into the various registers.
-Unlike the RTS instruction, the program counter address pulled off the stack isthe exact address to
-return to; the value on the stack is the value loaded into theprogram counter. It does not need to
-be incremented as a subroutine's returnaddress does.
-Pulling the status register gives the status flags the values they had immediatelyprior to the start
-of interrupt-processing.
-One extra byte is pulled in the 65802/65816 native mode than in emulationmode, the same extra byte
-that is pushed by interrupts in native mode, the programbank register. It is therefore essential
-that the return from interrupt be executed inthe same mode (emulation or native) as the original
+interrupt has ever occurred. It blindly pulls the first three (or four) bytes off the top of the
+stack and stores them into the various registers.
+Unlike the RTS instruction, the program counter address pulled off the stack is the exact address to
+return to; the value on the stack is the value loaded into the program counter. It does not need to
+be incremented as a subroutine's return address does.
+Pulling the status register gives the status flags the values they had immediately prior to the
+start of interrupt-processing.
+One extra byte is pulled in the 65802/65816 native mode than in emulation mode, the same extra byte
+that is pushed by interrupts in native mode, the program bank register. It is therefore essential
+that the return from interrupt be executed in the same mode (emulation or native) as the original
 interrupt.
 
-*   6502, 65C02, and Emulation Mode (e = 1): The status register is pulled from thestack, then the
+*   6502, 65C02, and Emulation Mode (e = 1): The status register is pulled from the stack, then the
     program counter is pulled from the stack (three bytes are pulled).
-*   65802/65816 Native Mode (e = 0): The status register is pulled from the stack,then the program
-    counter is pulled from the stack, then the program bank registeris pulled from the stack (four bytes
-    are pulled).
+*   65802/65816 Native Mode (e = 0): The status register is pulled from the stack, then the program
+    counter is pulled from the stack, then the program bank register is pulled from the stack (four
+    bytes are pulled).
 
 Native Mode Stack before RTI:
 │                       │Stack ↑            │
@@ -1445,7 +1452,7 @@ Native Mode Stack before RTI:
 │Stack Pointer Before → │                   │
 │                       │Bank 0 ↓           │
 
-Affected Flags: n v - - d i z c (6502, 65C02, 65802/65816 emulation mode e = 1)
+Affected Flags:  n v - - d i z c (6502, 65C02, 65802/65816 emulation mode e = 1)
                 n v m x d i z c (65802/65816 native mode e = 0)
 
 All flags are restored to their values prior to interrupt (each flag takes the value of its corresponding bit in the stacked status byte, except that the Break flag is ignored).
@@ -1455,13 +1462,13 @@ RTL                                                                             
 
 Return from Subroutine Long
 
-Pull the program counter (incrementing the stacked, sixteen-bit value by onebefore loading the
-program counter with it), then the program bank register fromthe stack.
-When a subroutine in another bank is called (via a jump to subroutine longinstruction), the current
-bank address is pushed onto the stack along with thereturn address. To return to the calling bank, a
-long return instruction must be executed, which first pulls the return address from the stack,
-increments it, and loadsthe program counter with it, then pulls the calling bank from the stack and
-loadsthe program bank register. This transfers control to the instruction immediatelyfollowing the
+Pull the program counter (incrementing the stacked, sixteen-bit value by one before loading the
+program counter with it), then the program bank register from the stack.
+When a subroutine in another bank is called (via a jump to subroutine long instruction), the current
+bank address is pushed onto the stack along with the return address. To return to the calling bank,
+a long return instruction must be executed, which first pulls the return address from the stack,
+increments it, and loads the program counter with it, then pulls the calling bank from the stack and
+loads the program bank register. This transfers control to the instruction immediately following the
 original jump to subroutine long.
 
 Stack before RTL:
@@ -1472,19 +1479,19 @@ Stack before RTL:
 │Stack Pointer Before → │                   │
 │                       │Bank 0 ↓           │
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 RTS                                                                                         *ca65-rts*
 
 Return from Subroutine
 
-Pull the program counter, incrementing the stacked, sixteen-bit value by onebefore loading the
+Pull the program counter, incrementing the stacked, sixteen-bit value by one before loading the
 program counter with it.
-When a subroutine is called (via a jump to subroutine instruction), the currentreturn address is
+When a subroutine is called (via a jump to subroutine instruction), the current return address is
 pushed onto the stack. To return to the code following the subroutine call, a return instruction
-must be executed, which pulls the return addressfrom the stack, increments it, and loads the program
-counter with it, transferringcontrol to the instruction immediately following the jump to
+must be executed, which pulls the return address from the stack, increments it, and loads the
+program counter with it, transferring control to the instruction immediately following the jump to
 subroutine.
 Stack before RTS:
 │                       │Stack ↑            │
@@ -1493,33 +1500,34 @@ Stack before RTS:
 │Stack Pointer Before → │                   │
 │                       │Bank 0 ↓           │
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 SBC                                                                                         *ca65-sbc*
 
 Subtract with Borrow from Accumulator
 
-Subtract the data located at the effective address specified by the operand fromthe contents of the
-accumulator; subtract one more if the carry flag is clear, andstore the result in the accumulator.
-The 65x processors have no subtract instruction that does not involve the carry.To avoid subtracting
-the carry flag from the result, either you must be sure it is setor you must explicitly set it
-(using SEC) prior to executing the SBC instruction.In a multi-precision (multi-word) subtract, you
-set the carry before the lowwords are subtracted. The low word subtraction generates a new carry
-flag valuebased on the subtraction. The carry is set if no borrow was required and cleared ifborrow
-was required. The complement of the new carry flag (one if the carry isclear) is subtracted during
-the next subtraction, and so on. Each result thus correctly reflects the borrow from the previous
-subtraction.Note that this use of the carry flag is the opposite of the way the borrow flag isused
-by some other processors, which clear (not set) the carry if no borrow wasrequired.
+Subtract the data located at the effective address specified by the operand from the contents of the
+accumulator; subtract one more if the carry flag is clear, and store the result in the accumulator.
+The 65x processors have no subtract instruction that does not involve the carry. To avoid
+subtracting the carry flag from the result, either you must be sure it is set or you must explicitly
+set it (using SEC) prior to executing the SBC instruction. In a multi-precision (multi-word)
+subtract, you set the carry before the low words are subtracted. The low word subtraction generates
+a new carry flag value based on the subtraction. The carry is set if no borrow was required and
+cleared if borrow was required. The complement of the new carry flag (one if the carry is clear) is
+subtracted during the next subtraction, and so on. Each result thus correctly reflects the borrow
+from the previous subtraction. Note that this use of the carry flag is the opposite of the way the
+borrow flag is used by some other processors, which clear (not set) the carry if no borrow was
+required.
 d flag clear: Binary subtraction is performed.
 d flag set: Binary coded decimal (BCD) subtraction is performed.
 
 *   8-bit accumulator (all processors): Data subtracted from memory is eight-bit.
-*   16-bit accumulator (65802/65816 only, m = 0): Data subtracted from memory issixteen-bit: the low
-    eight bits is located at the effective address; the high eight bits islocated at the effective
+*   16-bit accumulator (65802/65816 only, m = 0): Data subtracted from memory is sixteen-bit: the low
+    eight bits is located at the effective address; the high eight bits is located at the effective
     address plus one.
 
-Affected Flags:n v - - - - z c
+Affected Flags: n v - - - - z c
 
 *   n: Set if most significant bit of result is set; else cleared
 *   v: Set if signed overflow; cleared if valid signed result
@@ -1532,11 +1540,11 @@ SEC                                                                             
 Set Carry Flag
 
 Set the carry flag in the status register.
-SEC is used prior to subtraction (using the 65x's SBC instruction) to keep thecarry flag from
-affecting the result, and prior to an XCE (exchange carry flag withemulation bit) instruction to put
-the 65802 or 65816 into 6502 emulation mode.
+SEC is used prior to subtraction (using the 65x's SBC instruction) to keep the carry flag from
+affecting the result, and prior to an XCE (exchange carry flag with emulation bit) instruction to
+put the 65802 or 65816 into 6502 emulation mode.
 
-Affected Flags:- - - - - - - c
+Affected Flags: - - - - - - - c
 
 *   c: Carry flag set always
 
@@ -1546,10 +1554,10 @@ SED                                                                             
 Set Decimal Mode Flag
 
 Set the decimal mode flag in the status register.
-SED is used to shift 65x processors into decimal mode from binary mode, so thatthe ADC and SBC
-instructions will operate correctly on BCD data, performingautomatic decimal adjustment.
+SED is used to shift 65x processors into decimal mode from binary mode, so that the ADC and SBC
+instructions will operate correctly on BCD data, performing automatic decimal adjustment.
 
-Affected Flags:- - - - d - - -
+Affected Flags: - - - - d - - -
 
 *   d: Decimal mode flag set always
 
@@ -1560,13 +1568,13 @@ Set Interrupt Disable Flag
 
 Set the interrupt disable flag in the status register.
 SEI is used to disable hardware interrupt processing. When the i bit is set, maskable hardware
-interrupts (IRQ') are ignored. The processor itself sets the i flagwhen it begins servicing an
-interrupt, so interrupt handling routines that areintended to be interruptable must reenable
-interrupts with CLI. If interrupts are toremain blocked during the interrupt service, exiting the
+interrupts (IRQ') are ignored. The processor itself sets the i flag when it begins servicing an
+interrupt, so interrupt handling routines that are intended to be interruptable must reenable
+interrupts with CLI. If interrupts are to remain blocked during the interrupt service, exiting the
 routine via RTI will automatically restore the status register with the i flag clear, re-enabling
 interrupts.
 
-Affected Flags:- - - - - i - -
+Affected Flags: - - - - - i - -
 
 *   i: Interrupt disable flag set always
 
@@ -1576,17 +1584,17 @@ SEP                                                                             
 Set Status Bits
 
 For each one-bit in the operand byte, set the corresponding bit in the status register to one. For
-example, if bit three is set in the operand byte, bit three in the statusregister (the decimal flag)
-is set to one by this instruction. Zeroes in the operandbyte cause no change to their corresponding
-status register bits.This instruction lets you set any flag or flags in the status register with a
-singletwo-byte instruction. Furthermore, it is the only direct means of setting the m and xmode
-select flags. (Instructions that pull the P status register indirectly affect the mand x mode select
-flags).
+example, if bit three is set in the operand byte, bit three in the status register (the decimal
+flag) is set to one by this instruction. Zeroes in the operand byte cause no change to their
+corresponding status register bits. This instruction lets you set any flag or flags in the status
+register with a single two-byte instruction. Furthermore, it is the only direct means of setting the
+m and x mode select flags. (Instructions that pull the P status register indirectly affect the m and
+x mode select flags).
 
-*   6502 emulation mode (65802/65816, e = l): Neither the break flag nor bit five(the 6502's non-flag
+*   6502 emulation mode (65802/65816, e = l): Neither the break flag nor bit five (the 6502's non-flag
     bit) is affected by SEP.
 
-Affected Flags: n v - - d i z c (65802/65816 emulation e = 1)
+Affected Flags:  n v - - d i z c (65802/65816 emulation e = 1)
                 n v m x d i z c (65802/65816 native mode e = 0)
 
 All flags for which an operand bit is set are set to one.
@@ -1600,32 +1608,32 @@ Store Accumulator to Memory
 Store the value in the accumulator to the effective address specified by the operand.
 
 *   8-bit accumulator (all processors): Value is eight-bit.
-*   16-bit accumulator (65802/65816 only, m = 0): Value is sixteen-bit: the low-ordereight bits are
-    stored to the effective address; the high-order eight bits are stored tothe effective address plus
+*   16-bit accumulator (65802/65816 only, m = 0): Value is sixteen-bit: the low-order eight bits are
+    stored to the effective address; the high-order eight bits are stored to the effective address plus
     one.
     The 65x flags are unaffected by store instructions.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 STP                                                                                         *ca65-stp*
 
 Stop the Processor
 
-During the processor's next phase 2 clock cycle, stop the processor's oscillatorinput; the processor
-is effectively shut down until a reset occurs (until the RES' pinis pulled low).
-STP is designed to put the processor to sleep while it's not (actively) in use inorder to reduce
+During the processor's next phase 2 clock cycle, stop the processor's oscillator input; the
+processor is effectively shut down until a reset occurs (until the RES' pin is pulled low).
+STP is designed to put the processor to sleep while it's not (actively) in use in order to reduce
 power consumption. Since power consumption is a function of frequency with CMOS circuits, stopping
-the clock cuts power to almost nil.Your reset handling routine (pointed to by the reset vector,
-$00:FFFC-FD) shouldbe designed to either reinitialize the system or resume control through
-apreviously-installed reset handler.
-Remember that reset is an interrupt-like signal that causes the emulation bit to beset to one. It
-also causes the direct page register to be reset to zero; stack high to beset to one (forcing the
-stack pointer to page one); and the mode select flags to be setto one (eight-bit registers; a side
-effect is that the high bytes of the index registersare zeroed). STP is useful only in hardware
+the clock cuts power to almost nil. Your reset handling routine (pointed to by the reset vector,
+$00:FFFC-FD) should be designed to either reinitialize the system or resume control through a
+previously-installed reset handler.
+Remember that reset is an interrupt-like signal that causes the emulation bit to be set to one. It
+also causes the direct page register to be reset to zero; stack high to be set to one (forcing the
+stack pointer to page one); and the mode select flags to be set to one (eight-bit registers; a side
+effect is that the high bytes of the index registers are zeroed). STP is useful only in hardware
 systems (such as battery-powered systems) specifically designed to support a low-power mode.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 STX                                                                                         *ca65-stx*
@@ -1635,12 +1643,12 @@ Store Index Register X to Memory
 Store the value in index register X to the effective address specified by the operand.
 
 *   8-bit index registers (all processors): Value is eight-bit.
-*   16-bit index registers (65802/65816 only, x = 0): Value is sixteen-bit: the low-order eight bits
-    are stored to the effective address; the high-order eight bits arestored to the effective address
+*   16-bit index registers (65802/65816 only, x = 0): Value is sixteen-bit: the low- order eight bits
+    are stored to the effective address; the high-order eight bits are stored to the effective address
     plus one.
     The 65x flags are unaffected by store instructions.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 STY                                                                                         *ca65-sty*
@@ -1650,12 +1658,12 @@ Store Index Register Y to Memory
 Store the value in index register Y to the effective address specified by the operand.
 
 *   8-bit index registers (all processors): Value is eight-bit.
-*   16-bit index registers (65802/65816 only, x = 0): Value is sixteen-bit: the low-order eight bits
-    are stored to the effective address; the high-order eight bits arestored to the effective address
+*   16-bit index registers (65802/65816 only, x = 0): Value is sixteen-bit: the low- order eight bits
+    are stored to the effective address; the high-order eight bits are stored to the effective address
     plus one.
     The 65x flags are unaffected by store instructions.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 STZ                                                                                         *ca65-stz*
@@ -1665,11 +1673,11 @@ Store Zero to Memory
 Store zero to the effective address specified by the operand.
 
 *   8-bit accumulator (all processors): Zero is stored at the effective address.
-*   16-bit accumulator/memory (65802/65816 only, m = 0): Zero is stored at theeffective address and at
-    the effective address plus one.
+*   16-bit accumulator/memory (65802/65816 only, m = 0): Zero is stored at the effective address and
+    at the effective address plus one.
     The 65x store zero instruction does not affect the flags.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 TAX                                                                                         *ca65-tax*
@@ -1677,19 +1685,19 @@ TAX                                                                             
 Transfer Accumulator to Index Register X
 
 Transfer the value in the accumulator to index register X. If the registers are different sizes, the
-nature of the transfer is determined by the destination register. Thevalue in the accumulator is not
-changed by the operation.
+nature of the transfer is determined by the destination register. The value in the accumulator is
+not changed by the operation.
 
-*   8-bit accumulator, 8-bit index registers (all processors): Value transferred iseight-bit.
-*   8-bit accumulator, 16-bit index registers (65802/65816 only, m = 1, x = 0): Valuetransferred is
-    sixteen-bit; the eight-bit A accumulator becomes the low byte of theindex register; the hidden
-    eight-bit B accumulator becomes the high byte of theindex register.
-*   16-bit accumulator, 8-bit index registers (65802/65816 only, m = 0, x = l): Valuetransferred to
+*   8-bit accumulator, 8-bit index registers (all processors): Value transferred is eight-bit.
+*   8-bit accumulator, 16-bit index registers (65802/65816 only, m = 1, x = 0): Value transferred is
+    sixteen-bit; the eight-bit A accumulator becomes the low byte of the index register; the hidden
+    eight-bit B accumulator becomes the high byte of the index register.
+*   16-bit accumulator, 8-bit index registers (65802/65816 only, m = 0, x = l): Value transferred to
     the eight-bit index register is eight-bit, the low byte of the accumulator.
-*   16-bit accumulator, 16-bit index registers (65802/65816 only, m = 0, x = 0):Value transferred to
-    the sixteen-bit index register is sixteen-bit, the full sixteen-bitaccumulator.
+*   16-bit accumulator, 16-bit index registers (65802/65816 only, m = 0, x = 0): Value transferred to
+    the sixteen-bit index register is sixteen-bit, the full sixteen-bit accumulator.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of transferred value is set; else cleared
 *   z: Set if value transferred is zero; else cleared
@@ -1700,19 +1708,19 @@ TAY                                                                             
 Transfer Accumulator to Index Register Y
 
 Transfer the value in the accumulator to index register Y. If the registers are different sizes, the
-nature of the transfer is determined by the destination register. Thevalue in the accumulator is not
-changed by the operation.
+nature of the transfer is determined by the destination register. The value in the accumulator is
+not changed by the operation.
 
-*   8-bit accumulator, 8-bit index registers (all processors): Value transferred iseight-bit.
-*   8-bit accumulator, 16-bit index registers (65802/65816 only, m = 1, x = 0): Valuetransferred is
-    sixteen-bit; the eight-bit A accumulator becomes the low byte of theindex register; the hidden
-    eight-bit B accumulator becomes the high byte of theindex register.
-*   16-bit accumulator, 8-bit index registers (65802/65816 only, m = 0, x = 1): Valuetransferred to
+*   8-bit accumulator, 8-bit index registers (all processors): Value transferred is eight-bit.
+*   8-bit accumulator, 16-bit index registers (65802/65816 only, m = 1, x = 0): Value transferred is
+    sixteen-bit; the eight-bit A accumulator becomes the low byte of the index register; the hidden
+    eight-bit B accumulator becomes the high byte of the index register.
+*   16-bit accumulator, 8-bit index registers (65802/65816 only, m = 0, x = 1): Value transferred to
     the eight-bit index register is eight-bit, the low byte of the accumulator.
-*   16-bit accumulator, 16-bit index registers (65802/65816 only, m = 0, x = 0):Value transferred to
-    the sixteen-bit index register is sixteen-bit, the full sixteen-bitaccumulator.
+*   16-bit accumulator, 16-bit index registers (65802/65816 only, m = 0, x = 0): Value transferred to
+    the sixteen-bit index register is sixteen-bit, the full sixteen-bit accumulator.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of transferred value is set; else cleared
 *   z: Set if value transferred is zero; else cleared
@@ -1722,16 +1730,17 @@ TCD                                                                             
 
 Transfer 16 -Bit Accumulator to Direct Page Register
 
-Transfer the value in the sixteen-bit accumulator C to the direct page register D,regardless of the
-setting of the accumulator/memory mode flag.An alternate mnemonic is TAD, (transfer the value in the
-A accumulator to thedirect page register).
-In TCD, the "C" is used to indicate that sixteen bits are transferred regardless ofthe m flag. If
-the A accumulator is set to just eight bits (whether because the m flagis set, or because the
-processor is in 6502 emulation mode), then its value becomesthe low byte of the direct page register
-and the value in the hidden B accumulatorbecomes the high byte of the direct page register.
+Transfer the value in the sixteen-bit accumulator C to the direct page register D, regardless of the
+setting of the accumulator/memory mode flag. An alternate mnemonic is TAD, (transfer the value in
+the A accumulator to the direct page register).
+In TCD, the "C" is used to indicate that sixteen bits are transferred regardless of the m flag. If
+the A accumulator is set to just eight bits (whether because the m flag is set, or because the
+processor is in 6502 emulation mode), then its value becomes the low byte of the direct page
+register and the value in the hidden B accumulator becomes the high byte of the direct page
+register.
 The accumulator's sixteen-bit value is unchanged by the operation.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of transferred value is set; else cleared
 *   z: Set if value transferred is zero; else cleared
@@ -1741,18 +1750,18 @@ TCS                                                                             
 
 Transfer Accumulator to Stack Pointer
 
-Transfer the value in the accumulator to the stack pointer S. The accumulator'svalue is unchanged by
-the operation.
-An alternate mnemonic is TAS (transfer the value in the A accumulator to thestack pointer).
+Transfer the value in the accumulator to the stack pointer S. The accumulator's value is unchanged
+by the operation.
+An alternate mnemonic is TAS (transfer the value in the A accumulator to the stack pointer).
 In TCS, the "C " is used to indicate that, in native mode, sixteen bits are transferred regardless
-of the m flag. If the A accumulator is set to just eight bits (becausethe m flag is set), then its
-value is transferred to the low byte of the stack pointerand the value in the hidden B accumulator
-is transferred to the high byte of thestack pointer. In emulation mode, only the eight-bit A
-accumulator is transferred,since the high stack pointer byte is forced to one (the stack is confined
-to page one).TCS, along with TXS, are the only two instructions for changing the value in thestack
-pointer. The two are also the only two transfer instructions not to alter theflags.
+of the m flag. If the A accumulator is set to just eight bits (because the m flag is set), then its
+value is transferred to the low byte of the stack pointer and the value in the hidden B accumulator
+is transferred to the high byte of the stack pointer. In emulation mode, only the eight-bit A
+accumulator is transferred, since the high stack pointer byte is forced to one (the stack is
+confined to page one). TCS, along with TXS, are the only two instructions for changing the value in
+the stack pointer. The two are also the only two transfer instructions not to alter the flags.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 TDC                                                                                         *ca65-tdc*
@@ -1760,15 +1769,15 @@ TDC                                                                             
 Transfer Direct Page Register to 16 -Bit Accumulator
 
 Transfer the value in the sixteen-bit direct page register D to the sixteen-bit accumulator C,
-regardless of the setting of the accumulator/memory mode flag.An alternate mnemonic is TDA (transfer
-the value in the direct page register tothe A accumulator).
-In TDC, the "C" is used to indicate that sixteen bits are transferred regardless ofthe m flag. If
-the A accumulator is set to just eight bits (whether because the m flagis set, or because the
-processor is in 6502 emulation mode), then it takes the valueof the low byte of the direct page
-register and the hidden B accumulator takes thevalue of the high byte of the direct page register.
+regardless of the setting of the accumulator/memory mode flag. An alternate mnemonic is TDA
+(transfer the value in the direct page register to the A accumulator).
+In TDC, the "C" is used to indicate that sixteen bits are transferred regardless of the m flag. If
+the A accumulator is set to just eight bits (whether because the m flag is set, or because the
+processor is in 6502 emulation mode), then it takes the value of the low byte of the direct page
+register and the hidden B accumulator takes the value of the high byte of the direct page register.
 The direct page register's sixteen-bit value is unchanged by the operation.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of transferred value is set; else cleared
 *   z: Set if value transferred is zero; else cleared
@@ -1778,23 +1787,23 @@ TRB                                                                             
 
 Test and Reset Memory Bits Against Accumulator
 
-Logically AND together the complement of the value in the accumulator with thedata at the effective
-address specified by the operand. Store the result at the memory location.This has the effect of
-clearing each memory bit for which the correspondingaccumulator bit is set, while leaving unchanged
-all memory bits in which the corresponding accumulator bits are zeroes.Unlike the BIT instruction,
+Logically AND together the complement of the value in the accumulator with the data at the effective
+address specified by the operand. Store the result at the memory location. This has the effect of
+clearing each memory bit for which the corresponding accumulator bit is set, while leaving unchanged
+all memory bits in which the corresponding accumulator bits are zeroes. Unlike the BIT instruction,
 TRB is a read-modify-write instruction, not only calculating a result and modifying a flag, but also
-storing the result to memory aswell.
-The z zero flag is set based on a second and different operation, the ANDing ofthe accumulator value
-(not its complement) with the memory value (the same waythe BIT instruction affects the zero flag).
-The result of this second operation is notsaved; only the zero flag is affected by it.
+storing the result to memory as well.
+The z zero flag is set based on a second and different operation, the ANDing of the accumulator
+value (not its complement) with the memory value (the same way the BIT instruction affects the zero
+flag). The result of this second operation is not saved; only the zero flag is affected by it.
 
-*   8-bit accumulator/memory (65C02; 65802/65816, m = 1): Values in accumulatorand memory are
+*   8-bit accumulator/memory (65C02; 65802/65816, m = 1): Values in accumulator and memory are
     eight-bit.
-*   16-bit accumulator/memory (65802/65816 only, m = 0): Values in accumulatorand memory are
-    sixteen-bit: the low-order eight bits are located at the effectiveaddress; the high-order eight bits
-    are at the effective address plus one.
+*   16-bit accumulator/memory (65802/65816 only, m = 0): Values in accumulator and memory are
+    sixteen-bit: the low-order eight bits are located at the effective address; the high-order eight
+    bits are at the effective address plus one.
 
-Affected Flags:- - - - - - z -
+Affected Flags: - - - - - - z -
 
 *   z: Set if memory value AND'ed with accumulator value is zero; else cleared
 
@@ -1803,22 +1812,22 @@ TSB                                                                             
 
 Test and Set Memory Bits Against Accumulator
 
-Logically OR together the value in the accumulator with the data at the effectiveaddress specified
-by the operand. Store the result at the memory location.This has the effect of setting each memory
+Logically OR together the value in the accumulator with the data at the effective address specified
+by the operand. Store the result at the memory location. This has the effect of setting each memory
 bit for which the corresponding accumulator bit is set, while leaving unchanged all memory bits in
-which the corresponding accumulator bits are zeroes.Unlike the BIT instruction, TSB is a
+which the corresponding accumulator bits are zeroes. Unlike the BIT instruction, TSB is a
 read-modify-write instruction, not only calculating a result and modifying a flag, but storing the
-result to memory as well.The z zero flag is set based on a second different operation, the ANDing of
-theaccumulator value with the memory value (the same way the BIT instructionaffects the zero flag).
-The result of this second operation is not saved; only the zeroflag is affected by it.
+result to memory as well. The z zero flag is set based on a second different operation, the ANDing
+of the accumulator value with the memory value (the same way the BIT instruction affects the zero
+flag). The result of this second operation is not saved; only the zero flag is affected by it.
 
 *   8-bit accumulator/memory (65C02; 65802/65816, m = 1): Values in accumulator and memory are
     eight-bit.
-*   16-bit accumulator/memory (65802/65816 only, m = 0): Values in accumulatorand memory are
-    sixteen-bit: the low-order eight bits are located at the effectiveaddress; the high-order eight bits
-    are at the effective address plus one.
+*   16-bit accumulator/memory (65802/65816 only, m = 0): Values in accumulator and memory are
+    sixteen-bit: the low-order eight bits are located at the effective address; the high-order eight
+    bits are at the effective address plus one.
 
-Affected Flags:- - - - - - z -
+Affected Flags: - - - - - - z -
 
 *   z: Set if memory value AND'ed with accumulator value is zero; else cleared
 
@@ -1827,17 +1836,17 @@ TSC                                                                             
 
 Transfer Stack Pointer to 16-Bit Accumulator
 
-Transfer the value in the sixteen-bit stack pointer S to the sixteen-bit accumulatorC, regardless of
-the setting of the accumulator/memory mode flag.An alternate mnemonic is TSA (transfer the value in
-the stack pointer to the Aaccumulator).
-In TSC, the "C " is used to indicate that sixteen bits are transferred regardless ofthe m flag. If
-the A accumulator is set to just eight bits (whether because the m flagis set, or because the
-processor is in 6502 emulation mode), then it takes the valueof the low byte of the stack pointer
-and the hidden B accumulator takes the valueof the high byte of the stack pointer. (In emulation
-mode, B will always take avalue of one, since the stack is confined to page one.)
+Transfer the value in the sixteen-bit stack pointer S to the sixteen-bit accumulator C, regardless
+of the setting of the accumulator/memory mode flag. An alternate mnemonic is TSA (transfer the value
+in the stack pointer to the A accumulator).
+In TSC, the "C " is used to indicate that sixteen bits are transferred regardless of the m flag. If
+the A accumulator is set to just eight bits (whether because the m flag is set, or because the
+processor is in 6502 emulation mode), then it takes the value of the low byte of the stack pointer
+and the hidden B accumulator takes the value of the high byte of the stack pointer. (In emulation
+mode, B will always take a value of one, since the stack is confined to page one.)
 The stack pointer's value is unchanged by the operation.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of transferred value is set; else cleared
 *   z: Set if value transferred is zero; else cleared
@@ -1847,18 +1856,18 @@ TSX                                                                             
 
 Transfer Stack Pointer to Index Register X
 
-Transfer the value in the stack pointer S to index register X. The stack pointer'svalue is not
+Transfer the value in the stack pointer S to index register X. The stack pointer's value is not
 changed by the operation.
 
-*   8-bit index registers (all processors): Only the low byte of the value in the stackpointer is
+*   8-bit index registers (all processors): Only the low byte of the value in the stack pointer is
     transferred to the X register. In the 6502, the 65C02, and the 6502 emulation mode, the stack
-    pointer and the index registers are only a single byte each, sothe byte in the stack pointer is
-    transferred to the eight-bit X register. In 65802/65816 native mode, the stack pointer is sixteen
-    bits, so its most significant byte isnot transferred if the index registers are in eight-bit mode.
-*   16-bit index registers (65802/65816 only, x = 0): The full sixteen-bit value in thestack pointer
+    pointer and the index registers are only a single byte each, so the byte in the stack pointer is
+    transferred to the eight-bit X register. In 65802/ 65816 native mode, the stack pointer is sixteen
+    bits, so its most significant byte is not transferred if the index registers are in eight-bit mode.
+*   16-bit index registers (65802/65816 only, x = 0): The full sixteen-bit value in the stack pointer
     is transferred to the X register.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of transferred value is set; else cleared
 *   z: Set if value transferred is zero; else cleared
@@ -1872,16 +1881,16 @@ Transfer the value in index register X to the accumulator. If the registers are 
 nature of the transfer is determined by the destination (the accumulator). The value in the index
 register is not changed by the operation.
 
-*   8-bit index registers, 8-bit accumulator (all processors): Value transferred iseight-bit.
-*   16-bit index registers, 8-bit accumulator (65802/65816 only, x = 0, m = 1): Valuetransferred to
+*   8-bit index registers, 8-bit accumulator (all processors): Value transferred is eight-bit.
+*   16-bit index registers, 8-bit accumulator (65802/65816 only, x = 0, m = 1): Value transferred to
     the eight-bit accumulator is eight-bit, the low byte of the index register; the hidden eight-bit
     accumulator B is not affected by the transfer.
-*   8-bit index registers, 16-bit accumulator (65802/65816 only, x = 1, m = 0): Theeight-bit index
+*   8-bit index registers, 16-bit accumulator (65802/65816 only, x = 1, m = 0): The eight-bit index
     register becomes the low byte of the accumulator; the high accumulator byte is zeroed.
-*   16-bit index registers, 16-bit accumulator (65802/65816 only, x = 0, m = 0):Valuetransferred to
-    the sixteen-bit accumulator is sixteen-bit, the full sixteen-bit indexregister.
+*   16-bit index registers, 16-bit accumulator (65802/65816 only, x = 0, m = 0):Value transferred to
+    the sixteen-bit accumulator is sixteen-bit, the full sixteen-bit index register.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of transferred value is set; else cleared
 *   z: Set if value transferred is zero; else cleared
@@ -1891,21 +1900,21 @@ TXS                                                                             
 
 Transfer Index Register X to Stack Pointer
 
-Transfer the value in index register X to the stack pointer, S. The index register'svalue is not
+Transfer the value in index register X to the stack pointer, S. The index register's value is not
 changed by the operation.
-TXS, along with TCS, are the only two instructions for changing the value in thestack pointer. The
-two are also the only two transfer instructions that do not alterthe flags.
+TXS, along with TCS, are the only two instructions for changing the value in the stack pointer. The
+two are also the only two transfer instructions that do not alter the flags.
 
-*   6502, 65C02, and 6502 emulation mode(65802/65816, e = 1): The stack pointer isonly eight bits (it
-    is concatenated to a high byte of one, confining the stack to pageone), and the index registers are
-    only eight bits. The byte in X is transferred to theeight-bit stack pointer.
+*   6502, 65C02, and 6502 emulation mode(65802/65816, e = 1): The stack pointer is only eight bits (it
+    is concatenated to a high byte of one, confining the stack to page one), and the index registers are
+    only eight bits. The byte in X is transferred to the eight-bit stack pointer.
 *   8-bit index registers (65802/65816 native mode, x = l): The stack pointer is sixteen bits but the
     index registers are only eight bits. A copy of the byte in X is transferred to the low stack pointer
     byte and the high stack pointer byte is zeroed.
-*   16-bit index registers (65802/65816 native mode, x = 0): The full sixteen-bit valuein X is
+*   16-bit index registers (65802/65816 native mode, x = 0): The full sixteen-bit value in X is
     transferred to the sixteen-bit stack pointer.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 TXY                                                                                         *ca65-txy*
@@ -1918,7 +1927,7 @@ changed by the operation. Note that the two registers are never different sizes.
 *   8-bit index registers (x = 1): Value transferred is eight-bit.
 *   16-bit index registers (x = 0): Value transferred is sixteen-bit.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of transferred value is set; else cleared
 *   z: Set if value transferred is zero; else cleared
@@ -1932,16 +1941,16 @@ Transfer the value in index register Y to the accumulator. If the registers are 
 nature of the transfer is determined by the destination (the accumulator). The value in the index
 register is not changed by the operation.
 
-*   8-bit index registers, 8-bit accumulator (all processors): Value transferred iseight-bit.
-*   16-bit index registers, 8-bit accumulator (65802/65816 only, x = 0, m = 1): Valuetransferred to
+*   8-bit index registers, 8-bit accumulator (all processors): Value transferred is eight-bit.
+*   16-bit index registers, 8-bit accumulator (65802/65816 only, x = 0, m = 1): Value transferred to
     the eight-bit accumulator is eight-bit, the low byte of the index register; the hidden eight-bit
     accumulator B is not affected by the transfer.
-*   8-bit index registers, 16-bit accumulator (65802/65816 only, x = 1, m = 0): Theeight-bit index
+*   8-bit index registers, 16-bit accumulator (65802/65816 only, x = 1, m = 0): The eight-bit index
     register becomes the low byte of the accumulator; the high accumulator byte is zeroed.
-*   16-bit index registers, 16-bit accumulator (65802/65816 only, x = 0, m = 0):Value transferred to
-    the sixteen-bit accumulator is sixteen-bit, the full sixteen-bitindex register.
+*   16-bit index registers, 16-bit accumulator (65802/65816 only, x = 0, m = 0): Value transferred to
+    the sixteen-bit accumulator is sixteen-bit, the full sixteen-bit index register.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of transferred value is set; else cleared
 *   z: Set if value transferred is zero; else cleared
@@ -1957,7 +1966,7 @@ changed by the operation. Note that the two registers are never different sizes.
 *   8-bit index registers (x = 1): Value transferred is eight-bit.
 *   16-bit index registers (x = 0): Value transferred is sixteen-bit.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of transferred value is set; else cleared
 *   z: Set if value transferred is zero; else cleared
@@ -1967,54 +1976,55 @@ WAI                                                                             
 
 Wait for Interrupt
 
-Pull the RDY pin low. Power consumption is reduced and RDY remains lowuntil an external hardware
-interrupt (NMI, IRQ, ABORT, or RESET) is received.WAI is designed to put the processor to sleep
-during an external event to reduceits power consumption, to allow it to be synchronized with an
-external event, and/or to reduce interrupt latency (an interrupt occurring during execution of
-aninstruction is not acted upon until execution of the instruction is complete, perhapsmany cycles
-later; WAI ensures that an interrupt is recognized immediately).Once an interrupt is received,
-control is vectored through one of the hardwareinterrupt vectors; an RTI from the interrupt handling
-routine will return control tothe instruction following the original WAI. However, if by setting the
-i flag, interrupts have been disabled prior to the execution of the WAI instruction, and IRQ'
-isasserted, the "wait” condition is terminated and control resumes with the nextinstruction, rather
-than through the interrupt vectors. This provides the quickestresponse to an interrupt, allowing
-synchronization with external events. WAI alsofrees up the bus; since RDY is pulled low in the third
-instruction cycle, the processor may be disconnected from the bus if BE is also pulled low.
+Pull the RDY pin low. Power consumption is reduced and RDY remains low until an external hardware
+interrupt (NMI, IRQ, ABORT, or RESET) is received. WAI is designed to put the processor to sleep
+during an external event to reduce its power consumption, to allow it to be synchronized with an
+external event, and/ or to reduce interrupt latency (an interrupt occurring during execution of an
+instruction is not acted upon until execution of the instruction is complete, perhaps many cycles
+later; WAI ensures that an interrupt is recognized immediately). Once an interrupt is received,
+control is vectored through one of the hardware interrupt vectors; an RTI from the interrupt
+handling routine will return control to the instruction following the original WAI. However, if by
+setting the i flag, interrupts have been disabled prior to the execution of the WAI instruction, and
+IRQ' is asserted, the "wait” condition is terminated and control resumes with the next instruction,
+rather than through the interrupt vectors. This provides the quickest response to an interrupt,
+allowing synchronization with external events. WAI also frees up the bus; since RDY is pulled low in
+the third instruction cycle, the processor may be disconnected from the bus if BE is also pulled
+low.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 WDM                                                                                         *ca65-wdm*
 
 Reserved for Future Expansion
 
-The 65802 and 65816 use 255 of the 256 possible eight-bit opcodes. One wasreserved; it provides an
-"escape hatch" for future 65x processors to expand theirinstruction set to sixteen bit opcodes; this
-opcode would signal that the next byte isan opcode in the expanded instruction set. This reserved
-byte for future two-byteopcodes was given a temporary mnemonic, WDM, which happen to be the
-initialsof the processors' designer—William D. Mensch, Jr.
+The 65802 and 65816 use 255 of the 256 possible eight-bit opcodes. One was reserved; it provides an
+"escape hatch" for future 65x processors to expand their instruction set to sixteen bit opcodes;
+this opcode would signal that the next byte is an opcode in the expanded instruction set. This
+reserved byte for future two-byte opcodes was given a temporary mnemonic, WDM, which happen to be
+the initials of the processors' designer—William D. Mensch, Jr.
 WDM should never be used in a program, since it would render the object program incompatible with
-any future 65x processors.If the 65802/65816 WDM instruction is accidentally executed, it will act
-like atwo-byte NOP instruction.
+any future 65x processors. If the 65802/65816 WDM instruction is accidentally executed, it will act
+like a two-byte NOP instruction.
 
-Affected Flags:- - - - - - - -
+Affected Flags: - - - - - - - -
 
 ----------------------------------------------------------------------------------------------------
 XBA                                                                                         *ca65-xba*
 
 Exchange the B and A Accumulators
 
-B represents the high-order byte of the sixteen-bit C accumulator, and A in thiscase represents the
-low-order byte. XBA swaps the contents of the low-order andhigh-order bytes of C.
-An alternate mnemonic is SWA (swap the high and low bytes of the sixteen-bit Aaccumulator).
-XBA can be used to invert the low-order, high-order arrangement of a sixteen-bitvalue, or to
-temporarily store an eight-bit value from the A accumulator into B.Since it is an exchange, the
-previous contents of both accumulators are changed,replaced by the previous contents of the other.
-Neither the mode select flags nor the emulation mode flag affects this operation.The flags are
-changed based on the new value of the low byte, the A accumulator(that is, on the former value of
-the high byte, the B accumulator), even in sixteen-bit accumulator mode.
+B represents the high-order byte of the sixteen-bit C accumulator, and A in this case represents the
+low-order byte. XBA swaps the contents of the low-order and high-order bytes of C.
+An alternate mnemonic is SWA (swap the high and low bytes of the sixteen-bit A accumulator).
+XBA can be used to invert the low-order, high-order arrangement of a sixteen-bit value, or to
+temporarily store an eight-bit value from the A accumulator into B. Since it is an exchange, the
+previous contents of both accumulators are changed, replaced by the previous contents of the other.
+Neither the mode select flags nor the emulation mode flag affects this operation. The flags are
+changed based on the new value of the low byte, the A accumulator (that is, on the former value of
+the high byte, the B accumulator), even in sixteen- bit accumulator mode.
 
-Affected Flags:n - - - - - z -
+Affected Flags: n - - - - - z -
 
 *   n: Set if most significant bit of new 8-bit value in A accumulator is set; else cleared
 *   z: Set if new 8-bit value in A accumulator is zero; else cleared
@@ -2024,28 +2034,89 @@ XCE                                                                             
 
 Exchange Carry and Emulation Bits
 
-This instruction is the only means provided by the 65802 and 65816 to shiftbetween 6502 emulation
-mode and the full, sixteen-bit native mode.The emulation mode is used to provide hardware and
-software compatibilitybetween the 6502 and 65802/65816.
-If the processor is in emulation mode, then to switch to native mode, first clearthe carry bit, then
-execute an XCE. Since it is an exchange operation, the carry flagwill reflect the previous state of
-the emulation bit. Switching to native mode causesbit five to stop functioning as the break flag,
-and function instead as the x modeselect flag. A second mode select flag, m, uses bit six, which was
-unused in emulation mode. Both mode select flags are initially set to one (eight-bit modes).
-Thereare also other differences described in the text.
-If the processor is in native mode, then to switch to emulation mode, you first setthe carry bit,
-then execute an XCE. Switching to emulation mode causes the modeselect flags (m and x) to be lost
-from the status register, with x replaced by the bbreak flag. This forces the accumulator to eight
-bits, but the high accumulator byteis preserved in the hidden B accumulator. It also forces the
-index registers to eightbits, causing the loss of values in their high bytes, and the stack to page
+This instruction is the only means provided by the 65802 and 65816 to shift between 6502 emulation
+mode and the full, sixteen-bit native mode. The emulation mode is used to provide hardware and
+software compatibility between the 6502 and 65802/65816.
+If the processor is in emulation mode, then to switch to native mode, first clear the carry bit,
+then execute an XCE. Since it is an exchange operation, the carry flag will reflect the previous
+state of the emulation bit. Switching to native mode causes bit five to stop functioning as the
+break flag, and function instead as the x mode select flag. A second mode select flag, m, uses bit
+six, which was unused in emulation mode. Both mode select flags are initially set to one (eight-bit
+modes). There are also other differences described in the text.
+If the processor is in native mode, then to switch to emulation mode, you first set the carry bit,
+then execute an XCE. Switching to emulation mode causes the mode select flags (m and x) to be lost
+from the status register, with x replaced by the b break flag. This forces the accumulator to eight
+bits, but the high accumulator byte is preserved in the hidden B accumulator. It also forces the
+index registers to eight bits, causing the loss of values in their high bytes, and the stack to page
 one, causing the loss of the high byte of the previous stack address. There are also other
 differences described in the text.
 
-Affected Flags:- - m b - - - c | e
+Affected Flags: - - m b - - - c | e
 
 *   m: m is a native mode flag only; switching to native mode sets it to 1
 *   x: x is a native mode flag only; it becomes the b flag in emulation
 *   c: Takes emulation's previous value: set if previous mode was emulation; else cleared
 *   b: b is an emulation mode flag only; it is set to 1 to become the x flag in native
 *   e: Takes carry's previous value: set if carry was set; else cleared
+
+----------------------------------------------------------------------------------------------------
+BBR                                                                                         *ca65-bbr*
+
+Branch on Bit Reset
+
+The specified bit in the zero page location specified in the operand is tested. If it is clear
+(reset), a branch is taken; if it is set, the instruction immediately following the two-byte BBRx
+instruction is executed. The bit is specified by a number (0 through 7) concatenated to the end of
+the mnemonic. If the branch is performed, the third byte of the instruction is used as a signed
+displacement from the program counter; that is, it is added to the program counter: a positive value
+(numbers less than or equal to $80; that is, numbers with the high- order bit clear) results in a
+branch to a higher location; a negative value (greater than $80, with the high-order bit set)
+results in a branch to a lower location. Once the branch address is calculated, the result is loaded
+into the program counter, transferring control to that location.
+Most assemblers calculate the displacement for you: you must specify as the operand, not the
+displacement but rather the label to which you wish to branch. The assembler then calculates the
+correct offset.
+
+Affected Flags: - - - - - - - -
+
+----------------------------------------------------------------------------------------------------
+BBS                                                                                         *ca65-bbs*
+
+Branch on Bit Set
+
+The specified bit in the zero page location specified in the operand is tested. If it is set, a
+branch is taken; if it is clear (reset), the instruction immediately following the two-byte BBSx
+instruction is executed. The bit is specified by a number (0 through 7) concatenated to the end of
+the mnemonic.
+If the branch is performed, the third byte of the instruction is used as a signed displacement from
+the program counter; that is, it is added to the program counter: a positive value (numbers less
+than or equal to $80; that is, numbers with the high- order bit clear) results in a branch to a
+higher location; a negative value (greater than $80, with the high-order bit set) results in a
+branch to a lower location. Once the branch address is calculated, the result is loaded into the
+program counter, transferring control to that location.
+Most assemblers calculate the displacement for you: you must specify as the operand, not the
+displacement but rather the label to which you wish to branch. The assembler then calculates the
+correct offset.
+
+Affected Flags: - - - - - - - -
+
+----------------------------------------------------------------------------------------------------
+RMB                                                                                         *ca65-rmb*
+
+Reset Memory Bit
+
+Clear the specified bit in the zero page memory location specified in the operand. The bit to clear
+is specified by a number (0 through 7) concatenated to the end of the mnemonic.
+
+Affected Flags: - - - - - - - -
+
+----------------------------------------------------------------------------------------------------
+SMB                                                                                         *ca65-smb*
+
+Set Memory Bit
+
+Set the specified bit in the zero page memory location specified in the operand. The bit to set is
+specified by a number (0 through 7) concatenated to the end of the mnemonic.
+
+Affected Flags: - - - - - - - -
 

@@ -1,6 +1,8 @@
 ca65-adc	ca65.txt	/*ca65-adc*
 ca65-and	ca65.txt	/*ca65-and*
 ca65-asl	ca65.txt	/*ca65-asl*
+ca65-bbr	ca65.txt	/*ca65-bbr*
+ca65-bbs	ca65.txt	/*ca65-bbs*
 ca65-bcc	ca65.txt	/*ca65-bcc*
 ca65-bcs	ca65.txt	/*ca65-bcs*
 ca65-beq	ca65.txt	/*ca65-beq*
@@ -58,6 +60,7 @@ ca65-plp	ca65.txt	/*ca65-plp*
 ca65-plx	ca65.txt	/*ca65-plx*
 ca65-ply	ca65.txt	/*ca65-ply*
 ca65-rep	ca65.txt	/*ca65-rep*
+ca65-rmb	ca65.txt	/*ca65-rmb*
 ca65-rol	ca65.txt	/*ca65-rol*
 ca65-ror	ca65.txt	/*ca65-ror*
 ca65-rti	ca65.txt	/*ca65-rti*
@@ -68,6 +71,7 @@ ca65-sec	ca65.txt	/*ca65-sec*
 ca65-sed	ca65.txt	/*ca65-sed*
 ca65-sei	ca65.txt	/*ca65-sei*
 ca65-sep	ca65.txt	/*ca65-sep*
+ca65-smb	ca65.txt	/*ca65-smb*
 ca65-sta	ca65.txt	/*ca65-sta*
 ca65-stp	ca65.txt	/*ca65-stp*
 ca65-stx	ca65.txt	/*ca65-stx*
