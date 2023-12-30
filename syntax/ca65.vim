@@ -48,8 +48,9 @@ endif
 if exists("b:ca65_65C02") || exists("b:ca65_65816")
 syn keyword ca65C02Opcode   phx phy plx ply stz trb tsb stp wai
 syn match   ca65C02Opcode   "bb[rs][0-7]"
+syn match   ca65C02Opcode   "[rs]mb[0-7]"
 syn region  ca65C02BranchTarget     matchgroup=ca65C02Opcode start="\(bra \)" end="$" contains=ca65Comment keepend
-syn match   ca65BitSetBranchTarget  "\v(^(.*:)?[ \t]*)@<=(bb[rs][0-7][ \t]+[^,]+,[ \t]*)@<=[^;]+"
+syn match   ca65C02BitBranchTarget  "\v(^(.*:)?[ \t]*bb[rs][0-7][ \t]+[^,]+,[ \t]*)@<=[^;]+"
 endif
 
 " ********************************************************************************
@@ -68,7 +69,7 @@ syn match   ca65Label		"\v^\.?[a-z_][a-z0-9_]*:"
 syn match   ca65CheapLabel	"^@[a-z_][a-z0-9_]*:"
 syn match   ca65UnnamedLabel	"^:"
 syn match   ca65Comment		";.*" contains=ca65Todo
-syn keyword ca65Todo	    contained todo fixme xxx warning danger note notice bug
+syn keyword ca65Todo	    contained todo fixme warning danger note notice bug
 syn region  ca65String		start=+"+ skip=+\\"+ end=+"+
 syn match   ca65Char		    "'.'"
 
@@ -96,7 +97,7 @@ hi link ca65UnnamedLabel            ca65Label
 hi link ca6502BranchTarget          ca65Label
 hi link ca65C02BranchTarget	        ca65Label
 hi link ca65816BranchTarget	        ca65Label
-hi link ca65BitSetBranchTarget	    ca65Label
+hi link ca65C02BitBranchTarget	    ca65Label
 hi link ca65ProcLabel	            ca65Label
 hi link ca65MacLongbranchTarget	    ca65Label
 hi link ca65MacGenericBranchTarget  ca65Label
