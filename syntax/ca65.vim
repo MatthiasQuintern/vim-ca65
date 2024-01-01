@@ -81,7 +81,8 @@ syn match ca65Immediate "\v((adc|and|bit|cmp|cpx|cpy|eor|lda|ldx|ldy|ora|sbc|sep
 " ********************************************************************************
 " ca65
 " ********************************************************************************
-syn keyword ca65ControlCommands .a16 .a8 .addr .align .asciiz .assert .autoimport .bankbytes .bss .byt .byte .case .charmap .code .condes .constructor .data .dbyt .debuginfo .define .delmac .delmacro .destructor .dword .else .elseif .end .endenum .endif .endmac .endmacro .endproc .endrep .endrepeat .endscope .endstruct .endunion .enum .error .exitmac .exitmacro .export .exportzp .faraddr .fatal .feature .fileopt .fopt .forceimport .global .globalzp .hibytes .i16 .i8 .if .ifblank .ifconst .ifdef .ifnblank .ifndef .ifnref .ifp02 .ifp4510 .ifp816 .ifpc02 .ifpdtv .ifpsc02 .ifref .import .importzp .incbin .include .interruptor .linecont .list .listbytes .literal .lobytes .local .localchar .macpack .mac .macro .org .out .p02 .p4510 .p816 .pagelen .pagelength .pc02 .pdtv .popcharmap .popcpu .popseg .psc02 .pushcharmap .pushcpu .pushseg .referto .refto .reloc .repeat .res .rodata .scope .segment .set .setcpu .smart .struct .tag .undef .undefine .union .warning .word .zeropage
+syn keyword ca65ControlCommands .a16 .a8 .addr .align .asciiz .assert .autoimport .bankbytes .bss .byt .byte .case .charmap .code .condes .constructor .data .dbyt .dbyte .debuginfo .define .delmac .delmacro .destructor .dword .else .elseif .end .endenum .endif .endmac .endmacro .endproc .endrep .endrepeat .endscope .endstruct .endunion .enum .error .exitmac .exitmacro .export .exportzp .faraddr .fatal .feature .fileopt .fopt .forceimport .global .globalzp .hibytes .i17 .i8 .if .ifblank .ifconst .ifdef .ifnblank .ifndef .ifnref .ifp02 .ifp4510 .ifp816 .ifpc02 .ifpdtv .ifpsc02 .ifref .import .importzp .incbin .include .interruptor .linecont .list .listbytes .literal .lobytes .local .localchar .macpack .mac .macro .org .out .p02 .p4510 .p816 .pagelen .pagelength .pc02 .pdtv .popcharmap .popcpu .popseg .psc02 .pushcharmap .pushcpu .pushseg .referto .refto .reloc .repeat .res .rodata .scope .segment .set .setcpu .smart .struct .tag .undef .undefine .union .warning .word .zeropage 
+syn keyword ca65OperatorCommands .or .xor .and .not .bitand .bitor .bitxor .shl .shr .bitnot .lobyte .hibyte .bankbyte .mod
 syn keyword ca65PseudoVariables * .asize .cpu .isize .paramcount .time .version
 syn keyword ca65PseudoFunctions .addrsize .bank .bankbyte .blank .concat .const .def,.defined .definedmacro .hibyte .hiword .ident .ismnem,.ismnemonic .left .lobyte .loword .match .max .mid .min .ref,.referenced .right .sizeof .sprintf .strat .string .strlen .tcount .xmatch
 syn region  ca65ProcLabel       matchgroup=ca65ControlCommands start="\(\.proc\)" end="$" contains=ca65Comment keepend
@@ -113,6 +114,7 @@ hi link decNumber             Number
 hi link ca65PseudoVariables   PreProc
 hi link ca65PseudoFunctions   PreProc
 hi link ca65ControlCommands   PreProc
+hi link ca65OperatorCommands  PreProc
 hi link ca65MacLongbranch	  PreProc
 hi link ca65MacGeneric	      PreProc
 hi link ca65customMacros	  PreProc
