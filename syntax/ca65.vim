@@ -87,7 +87,7 @@ syn keyword ca65PseudoFunctions .addrsize .bank .bankbyte .blank .concat .const 
 syn region  ca65ProcLabel       matchgroup=ca65ControlCommands start="\(\.proc\)" end="$" contains=ca65Comment keepend
 " macro packs
 syn keyword ca65MacGeneric      add sub
-syn region  ca65MacLongbranchTarget       matchgroup=ca65MacLongbranch start="\v(^(.*:)?[ \t]*)@<=(jcc|jcs|jeq|jmi|jne|jpl|jvc)[ \t]+" end="$" contains=ca65Comment keepend
+syn region  ca65MacLongbranchTarget       matchgroup=ca65MacLongbranch start="\v(^(.*:)?[ \t]*)@<=(jcc|jcs|jeq|jmi|jne|jpl|jvc|jvs)[ \t]+" end="$" contains=ca65Comment keepend
 syn region  ca65MacGenericBranchTarget    matchgroup=ca65MacGeneric start="\v(^(.*:)?[ \t]*)@<=(bge|blt|bgt|ble|bnz|bze)[ \t]+" end="$" contains=ca65Comment keepend
 
 " The default methods for highlighting.  Can be overridden later
