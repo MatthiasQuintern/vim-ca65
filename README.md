@@ -4,6 +4,10 @@ This plugin provides **syntax** highlighting, **convenience** functions and **he
 *I currently only work with the 65C02 processor. However, I tried to include everything for the 65816 as well. 
 If you find anything that is missing or mistakes, please open an issue or a pull request.*
 
+<p align="center">
+<img style="height: 400px; " src="screenshot.jpeg" alt="vim-ca65 highlights instructions, labels, literals, macros and ca65 functions">
+</p>
+
 
 ## Features
 ### Syntax Highlighting
@@ -13,7 +17,7 @@ and the macro packs `generic` and `longbranch`.
 ### Convenience
 This plugin provides the `b:match_words` variable for jumping between words (requires `matchit.vim`)
 Supported are the assembler commands like `.if` `.endif`, `.macro` `.endmacro` as well as stack instructions.
-This allows for easier checking of stack push/pull order.
+This allows easier checking of stack push/pull order.
 
 There is also a function that opens a header/source file with the same name in a vsplit.
 For example if `~/project/main.s65` is opened, the function would open `~/project/main.h65` to the right of it.
@@ -58,7 +62,7 @@ link `ca65Label` (or `ca65Opcode`) to another class, eg:
 hi link ca65Label Typedef
 ```
 
-You can add syntax highlighting for your own assembler like this:
+You can add syntax highlighting for your own macros like this:
 ```vim
 " in ~/.vim/ftplugin/ca65.vim
 syn keyword ca65customMacros Macro1 Macro2 mul div macro3
