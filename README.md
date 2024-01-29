@@ -23,7 +23,7 @@ There is also a function that opens a header/source file with the same name in a
 For example if `~/project/main.s65` is opened, the function would open `~/project/main.h65` to the right of it.
 
 ### Help
-I compiled parts of the W65C02 datasheet and parts of the "Programming the 658126" book into a vim help page.
+I compiled parts of the W65C02 datasheet and parts of the "Programming the 65816" book into a vim help page.
 Type `:help <opcode>` (or `help ca65-<opcode>` if the first one gives the wrong page) to see information about a opcode (how it works, updated flags...).
 
 ## Installation
