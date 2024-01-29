@@ -65,9 +65,9 @@ endif
 " ********************************************************************************
 " ASSEMBLER
 " ********************************************************************************
-syn match   ca65Label		"\v^\.?[a-z_][a-z0-9_]*:"
-syn match   ca65CheapLabel	"^@[a-z_][a-z0-9_]*:"
-syn match   ca65UnnamedLabel	"^:"
+syn match   ca65Label		"\v^\s*\.?[a-z_][a-z0-9_]*:"
+syn match   ca65CheapLabel	"^\s*@[a-z_][a-z0-9_]*:"
+syn match   ca65UnnamedLabel	"^\s*:"
 syn match   ca65Comment		";.*" contains=ca65Todo
 syn keyword ca65Todo	    contained todo fixme warning danger note notice bug
 syn region  ca65String		start=+"+ skip=+\\"+ end=+"+
