@@ -1,7 +1,7 @@
 " Vim syntax file
 " Language:	ca65: (MOS 65C02 assembler
 " Maintainer: Matthias Quintern
-" Latest Revision: December 2023
+" Latest Revision: January 2024
 " Originally by: Oyd E. Leven <oyd11@softhome.net> (2005)
 
 if exists("b:current_syntax")
@@ -65,9 +65,9 @@ endif
 " ********************************************************************************
 " ASSEMBLER
 " ********************************************************************************
-syn match   ca65Label		"\v^\s*\.?[a-z_][a-z0-9_]*:"
-syn match   ca65CheapLabel	"^\s*@[a-z_][a-z0-9_]*:"
-syn match   ca65UnnamedLabel	"^\s*:"
+syn match   ca65Label		"\v^\s*\zs\.?[a-z_][a-z0-9_]*:"
+syn match   ca65CheapLabel	"^\s*\zs@[a-z_][a-z0-9_]*:"
+syn match   ca65UnnamedLabel	"^\s*\zs:"
 syn match   ca65Comment		";.*" contains=ca65Todo
 syn keyword ca65Todo	    contained todo fixme warning danger note notice bug
 syn region  ca65String		start=+"+ skip=+\\"+ end=+"+
