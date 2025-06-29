@@ -39,13 +39,24 @@ call plug#end()
 ## Configuration
 ### Select processor
 By default, the syntax highlighting only highlights the original 6502 instructions.
-To enable the illegal/undocumented instructions, the 65C02 instructions or the 65816 instructions, write this into your `vimrc`:
+#### Globally in vimrc
+To always enable the illegal/undocumented instructions, the 65C02 instructions or the 65816 instructions, include this in your `vimrc`:
 ```vim
 " in ~/.vimrc
 let g:ca65_illegal = 1  " enable the illegal 6502 opcodes
 let g:ca65_65C02 = 1    " enable 65C02 instructions
 let g:ca65_65816 = 1    " enable 65816 instructions
 ```
+
+#### Per-file or project
+Alternatively, you can enable processor syntax highlighting for a specific file by including a [modeline](https://vim.fandom.com/wiki/Modeline_magic) in the file:
+```ca65
+; in your ca65 file, include one of these lines at the top or bottom of the file:
+; vim: ft=ca65.ca65-65C02
+; vim: ft=ca65.ca65-65816
+; vim: ft=ca65.ca65-illegal
+```
+Setting the filetype `ca65-...` will simply set the corresponding `g:ca65-...` variable.
 
 ### Select filetype
 By default, the plugin loads for files having a `.s65` or `.h65` extension.
