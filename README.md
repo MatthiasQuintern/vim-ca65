@@ -24,7 +24,7 @@ For example if `~/project/main.s65` is opened, the function would open `~/projec
 
 ### Help
 I compiled parts of the W65C02 datasheet and parts of the "Programming the 65816" book into a vim help page.
-Type `:help <opcode>` (or `help ca65-<opcode>` if the first one gives the wrong page) to see information about a opcode (how it works, updated flags...).
+Type `:help <opcode>` (or `help ca65-<opcode>` if the first one gives the wrong page) to see information about an opcode (how it works, updated flags...).
 
 ## Installation
 Install using your favorite plugin manager, for example with vim-plug:
